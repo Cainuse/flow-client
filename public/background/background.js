@@ -67,17 +67,13 @@ async function createWebSocketConnection() {
   // }
 
   if ("WebSocket" in window) {
-    websocket = new WebSocket("ws://localhost:8080/ws");
-
+    websocket = new WebSocket("ws://localhost:9090/ws");
     websocket.onopen = function() {
       console.log(`{"email":${userEmail}, "action":"Sign In"}`);
-      websocket.send(
-        `{"email":"ABwppHHUAGaEOI2o_jIDCkQpD5re88q4jCSvDe80qoCH1ysCz2eQ8UJk-pY8uP2ccdsqdZud1_NhrA", "action":"Sign In"}`
-      );
+      websocket.send(`{"email":"${userEmail}", "action":"Sign In"}`);
 
       console.log("client did reach out");
     };
-
     websocket.onmessage = function(event) {
       console.log("Entering on message listener");
       if (event.data != null) {
