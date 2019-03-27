@@ -2,6 +2,7 @@
   "name": "Project Ascension",
   "manifest_version": 2,
   "version": "0.1",
+  "browser_action": {},
   "description": "Testing voice control browser",
   "chrome_url_overrides": {
     "newtab": "./index.html"
@@ -10,6 +11,13 @@
     "scripts": ["./background/background.js"],
     "persistent": true
   },
-  "permissions": ["tabs", "webNavigation"],
-  "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'"
+  "permissions": [
+    "tabs",
+    "webNavigation",
+    "*://*/*",
+    "identity",
+    "activeTab",
+    "identity.email"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
