@@ -3,7 +3,7 @@
 // <reference types="uuid"/>
 
 function helperNumberOfTabs() {
-  chrome.tabs.query({ windowType: "normal" }, function(tabs) {
+  chrome.tabs.query({ windowType: "normal" }, function (tabs) {
     console.log(
       "Number of open tabs in all normal browser windows:",
       tabs.length
@@ -12,12 +12,12 @@ function helperNumberOfTabs() {
 }
 
 function switchTab(parsedMessage) {
-  chrome.windows.getCurrent({ populate: true }, function(windowsArray) {
+  chrome.windows.getCurrent({ populate: true }, function (windowsArray) {
     const currentWindowId = windowsArray.id;
     if (numberString < windowsArray.tabs.length) {
       chrome.tabs.query(
         { index: parseInt(numberString), windowId: currentWindowId },
-        function(tabs) {
+        function (tabs) {
           chrome.tabs.update(tabs[0].id, { active: true });
         }
       );
@@ -28,7 +28,7 @@ function switchTab(parsedMessage) {
 }
 
 function commandCreateTab(parsedMessage) {
-  chrome.windows.getCurrent({ populate: true }, function(windowsArray) {
+  chrome.windows.getCurrent({ populate: true }, function (windowsArray) {
     const currentWindowId = windowsArray.id;
     chrome.tabs.create(
       { windowId: currentWindowId, active: true, index: 0 },
@@ -40,7 +40,7 @@ function commandCreateTab(parsedMessage) {
 }
 
 function commandDeleteTab(parsedMessage) {
-  chrome.windows.getCurrent({ populate: true }, function(windowsArray) {
+  chrome.windows.getCurrent({ populate: true }, function (windowsArray) {
     if (numberString < windowsArray.tabs.length) {
       chrome.tabs.discard(numberString, () => {
         // successful callback
@@ -69,7 +69,7 @@ async function createWebSocketConnection() {
   if ("WebSocket" in window) {
     websocket = new WebSocket("ws://localhost:8080/ws");
 
-    websocket.onopen = function() {
+    websocket.onopen = function () {
       console.log(`{"email":${userEmail}, "action":"Sign In"}`);
       websocket.send(
         `{"email":"ABwppHHUAGaEOI2o_jIDCkQpD5re88q4jCSvDe80qoCH1ysCz2eQ8UJk-pY8uP2ccdsqdZud1_NhrA", "action":"Sign In"}`
@@ -78,7 +78,7 @@ async function createWebSocketConnection() {
       console.log("client did reach out");
     };
 
-    websocket.onmessage = function(event) {
+    websocket.onmessage = function (event) {
       console.log("Entering on message listener");
       if (event.data != null) {
         console.log("Data is not null");
@@ -94,11 +94,12 @@ async function createWebSocketConnection() {
 createWebSocketConnection();
 
 function endSession(websocket) {
-  websocket.onclose = function() {
+  websocket.onclose = function () {
     console.log("Websocket closed");
   };
 }
-
+let prevTabId = null;
+let prevWinId = null;
 // Message marshalling
 function messageHandler(parsedMessage) {
   chrome.tabs.query(
@@ -107,19 +108,26 @@ function messageHandler(parsedMessage) {
       active: true
     },
     tabArray => {
-      let extraParam = {
-        tabId: tabArray[0].id,
-        winId: tabArray[0].windowId
-      };
+      let extraParam;
+      if (tabArray[0]) {
+        extraParam = {
+          tabId: tabArray[0].id,
+          winId: tabArray[0].windowId
+        };
+        prevTabId = extraParam.tabId;
+        prevWinId = extraParam.winId;
+      }
       switch (parsedMessage.command) {
         case "Scroll":
-          return scrollPage(parsedMessage.param, extraParam);
+          return scrollPage(parsedMessage.param, extraParam, null);
         case "Change Scrolling Speed":
           return changeScrollingSpeed(parsedMessage.param, extraParam);
         case "Change Browser Display":
           return changeStateOfBrowser(parsedMessage.param, extraParam);
         case "Navigate Webpage":
           return goToWebPage(parsedMessage.param, extraParam);
+        case "PageAction":
+          return backwardForwardRefreshPage(parsedMessage.param, extraParam)
         default:
           return false;
       }
@@ -132,24 +140,19 @@ function messageHandler(parsedMessage) {
  * @param {*} win
  */
 
-async function changeStateOfBrowser(param, extraParam) {
+function changeStateOfBrowser(param, extraParam) {
   console.log("Activated!");
   let availableStates = ["normal", "minimized", "maximized", "fullscreen"];
-
-  locParam = param.fields.DisplayMode.Kind.StringValue;
+  let locParam = param.fields.DisplayMode.Kind.StringValue;
+  let browserWinId;
+  if (!extraParam) {
+    browserWinId = prevWinId;
+  } else {
+    browserWinId = extraParam.winId;
+  }
+  console.log(browserWinId);
   if (availableStates.includes(locParam)) {
-    chrome.tabs.query(
-      {
-        currentWindow: true,
-        active: true
-      },
-      tabArray => {
-        chrome.windows.update(tabArray[0].windowId, {
-          state: locParam
-        });
-        console.log(`Updating browser size to ${locParam}`);
-      }
-    );
+    chrome.windows.update(browserWinId, { state: locParam });
   }
 }
 
@@ -163,10 +166,15 @@ let scroll = null;
  * Scrolls down on the highlighted tab
  * @param {*} win
  */
-function scrollPage(param, extraParam) {
+function scrollPage(param, extraParam, fnParam) {
   let x = 0;
   let y = 0;
-  locParam = param.fields.Direction.Kind.StringValue;
+  let locParam;
+  if (param != null) {
+    locParam = param.fields.Direction.Kind.StringValue;
+  } else {
+    locParam = fnParam;
+  }
   scrollParam.direction = locParam;
   switch (scrollParam.direction) {
     case "up":
@@ -210,7 +218,7 @@ function changeScrollingSpeed(param, extraParam) {
       scrollParam.speed = 0;
       break;
   }
-  scrollPageHelper(x, y, extraParam);
+  scrollPage(null, extraParam, scrollParam.direction);
 }
 
 function scrollPageHelper(x, y, extraParam) {
@@ -225,16 +233,20 @@ function scrollPageHelper(x, y, extraParam) {
     }, 100);
   }
 }
-function goForwardOrBackward(param) {
-  if (param == "forward") {
-    chrome.tabs.goForward(currTab.id);
-  } else if (param == "backward") {
-    chrome.tabs.goBack(currTab.id);
+function backwardForwardRefreshPage(param, extraParam) {
+  let locParam = param.fields.PageAction.Kind.StringValue
+  if (locParam != "") {
+    if (locParam == "forward") {
+      chrome.tabs.goForward();
+    } else if (locParam == "backward") {
+      chrome.tabs.goBack();
+    }
+  } else {
+    locParam = param.fields.PageActionCont.Kind.StringValue
+    if (locParam == "refresh") {
+      chrome.tabs.reload();
+    }
   }
-}
-
-function refresh(tab) {
-  chrome.tabs.reload();
 }
 
 // NOT YET SUPPORTED
@@ -257,15 +269,17 @@ function goToWebPage(param, extraParam) {
   ) {
     urlParam += ".com";
   }
+  let regex = /\.+/
+  let regex1 = /\s+/
   chrome.tabs.update(extraParam.tabId, {
-    url: "https://www." + urlParam.replace("www.", "")
+    url:
+      "https://www." +
+      urlParam
+        .replace("www.", "")
+        .replace(regex, ".")
+        .replace(regex1, "")
   });
 }
-// let currTab = currTab = chrome.tabs.getCurrent(tab => {
-//   return tab;
-// });
-
-let currWin = null;
-function start(win) {}
+function start(win) { }
 
 chrome.browserAction.onClicked.addListener(start);
