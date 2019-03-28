@@ -2,6 +2,10 @@
 //<reference types="chrome"/>
 // <reference types="uuid"/>
 
+function focusBrowser(parsedMessage) {
+  chrome.bro;
+}
+
 function helperNumberOfTabs() {
   chrome.tabs.query({ windowType: "normal" }, function(tabs) {
     console.log(
@@ -51,36 +55,35 @@ function commandDeleteTab(parsedMessage) {
 
 async function createWebSocketConnection() {
   let websocket, isCommandSuccessful;
-  let userEmail;
-  let userId;
+  let userEmail, userId;
   await chrome.identity.getProfileUserInfo(user => {
     userEmail = user.email;
     userId = user.id;
   });
-  console.log(userEmail);
-  // try{
 
-  //   console.log(userInfo);
-  // }catch{
-  //   alert("Sorry, you may not be logged into your browser, as such we cannot create connection to our server!");
-  //   return;
-  // }
+  //Set timeout for 10 minutes
+  let timeoutHandle = window.setTimeout(() => {
+    endSession(websocket);
+  }, 600000);
 
   if ("WebSocket" in window) {
     websocket = new WebSocket("ws://localhost:9090/ws");
     websocket.onopen = function() {
-      console.log(`{"email":${userEmail}, "action":"Sign In"}`);
       websocket.send(`{"email":"${userEmail}", "action":"Sign In"}`);
 
       console.log("client did reach out");
     };
+
     websocket.onmessage = function(event) {
-      console.log("Entering on message listener");
       if (event.data != null) {
-        console.log("Data is not null");
-        console.log(JSON.parse(event.data));
-        isCommandSuccessful = messageHandler(JSON.parse(event.data));
+        isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
+        console.log(event.data);
+        // Reset timer
+        window.clearTimeout(timeoutHandle);
+        timeoutHandle = window.setTimeout(() => {
+          endSession(websocket);
+        }, 10000);
       }
     };
 
@@ -90,13 +93,17 @@ async function createWebSocketConnection() {
 createWebSocketConnection();
 
 function endSession(websocket) {
-  websocket.onclose = function() {
-    console.log("Websocket closed");
-  };
+  console.log("Websocket closed");
+  websocket.close(1000, "Client Termination");
+  if (websocket.readyState === websocket.CLOSED) {
+    alert("Chrome Voice Control has ended due to inactivity");
+    return;
+  }
 }
 
 // Message marshalling
-function messageHandler(parsedMessage) {
+function messageHandler(parsedMessage, websocket) {
+  console.log(websocket);
   chrome.tabs.query(
     {
       currentWindow: true,
@@ -116,6 +123,8 @@ function messageHandler(parsedMessage) {
           return changeStateOfBrowser(parsedMessage.param, extraParam);
         case "Navigate Webpage":
           return goToWebPage(parsedMessage.param, extraParam);
+        case "Exit App":
+          return endSession(websocket);
         default:
           return false;
       }
