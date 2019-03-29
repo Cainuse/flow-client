@@ -1,10 +1,5 @@
 /* eslint-disable no-undef */
 //<reference types="chrome"/>
-// <reference types="uuid"/>
-
-function focusBrowser(parsedMessage) {
-  chrome.bro;
-}
 
 function helperNumberOfTabs() {
   chrome.tabs.query({ windowType: "normal" }, function(tabs) {
