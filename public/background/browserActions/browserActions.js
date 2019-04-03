@@ -124,7 +124,6 @@ function closeWindow(param, extraParam){
     chrome.windows.remove(extraParam.winId);
 }
 
-
 function cycleWindow(param, extraParam){
     chrome.windows.getAll((windows)=>{
         console.log(windows);
@@ -141,9 +140,7 @@ function cycleWindow(param, extraParam){
                }
                console.log(windows[pointer]);
                chrome.windows.update(windows[pointer].id, {focused:true});
-
            }
        }
-
     });
 }
