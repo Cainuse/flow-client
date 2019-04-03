@@ -8,14 +8,15 @@
     "newtab": "./index.html"
   },
   "background": {
-    "scripts": ["./background/sessionalActions/sessionalActions.js",
+    "scripts": [
+      "./background/sessionalActions/sessionalActions.js",
       "./background/actionRouter/actionRouter.js",
       "./background/background.js",
       "./background/tabularActions/tabularActions.js",
       "./background/browserActions/browserActions.js",
       "./background/pageActions/pageActions.js",
       "./background/pageActions/pageActionsVar.js"
-      ],
+    ],
     "persistent": true
   },
   "permissions": [
