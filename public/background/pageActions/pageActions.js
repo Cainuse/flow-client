@@ -65,3 +65,24 @@ function scrollPageHelper(x, y, extraParam) {
     }, 100);
   }
 }
+
+function zoomView(param, extraParam) {
+  let zoomFactor;
+
+  chrome.tabs.getZoom(function(currentZoomFactor) {
+    zoomFactor = currentZoomFactor;
+    switch (param.fields.ZoomDirection.Kind.StringValue) {
+      case "out":
+        chrome.tabs.setZoom(zoomFactor + 0.1);
+        break;
+      case "in":
+        chrome.tabs.setZoom(zoomFactor - 0.1);
+        break;
+      case "":
+        chrome.tabs.setZoom(zoomFactor - 0.1);
+        break;
+      default:
+        break;
+    }
+  });
+}
