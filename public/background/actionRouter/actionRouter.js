@@ -38,6 +38,14 @@ function messageHandler(parsedMessage, websocket) {
                     return createTab(parsedMessage.param, extraParam);
                 case "Exit App":
                     return endSession(websocket);
+                case "Web Search":
+                    return searchWeb(parsedMessage.param, extraParam);
+                case "Create Window":
+                    return createWindow(parsedMessage.param, extraParam);
+                case "Close Window":
+                    return closeWindow(parsedMessage.param, extraParam);
+                case "Change Window":
+                    return cycleWindow(parsedMessage.param, extraParam);
                 default:
                     return false;
             }
