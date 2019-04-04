@@ -126,8 +126,6 @@ function closeWindow(param, extraParam){
 
 function cycleWindow(param, extraParam){
     chrome.windows.getAll((windows)=>{
-        console.log(windows);
-        console.log(extraParam.winId);
        for(let index = 0; index<windows.length; index++){
            let windowId = extraParam.winId;
            if(windowId==null){
@@ -138,7 +136,6 @@ function cycleWindow(param, extraParam){
                if(index+1<windows.length){
                    pointer = index + 1;
                }
-               console.log(windows[pointer]);
                chrome.windows.update(windows[pointer].id, {focused:true});
            }
        }
