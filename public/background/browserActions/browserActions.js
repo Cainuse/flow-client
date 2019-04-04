@@ -8,7 +8,6 @@ function focusBrowser(parsedMessage) {
  */
 
 function changeStateOfBrowser(param, extraParam) {
-    console.log("Activated!");
     let availableStates = ["normal", "minimized", "maximized", "fullscreen"];
     let locParam = param.fields.DisplayMode.Kind.StringValue;
     let browserWinId;
@@ -68,5 +67,77 @@ function goToWebPage(param, extraParam) {
                 .replace("www.", "")
                 .replace(regex, ".")
                 .replace(regex1, "")
+    });
+}
+
+function searchWeb(param, extraParam){
+    let locSearchQuery = param.fields.Query.Kind.StringValue;
+    let locSearchEngine = param.fields.SearchEngine.Kind.StringValue;
+    switch(locSearchEngine){
+        case "Amazon":
+            chrome.tabs.update(extraParam.tabId, {
+                url: "https://www.amazon.com/s?k="+locSearchQuery
+            });
+            break;
+        case "Youtube":
+            chrome.tabs.update(extraParam.tabId, {
+                url: "https://www.youtube.com/results?search_query="+locSearchQuery
+            });
+            break;
+        case "Wikipedia":
+            chrome.tabs.update(extraParam.tabId, {
+                url: "https://en.wikipedia.org/wiki/"+locSearchQuery
+            });
+            break;
+        case "Ebay":
+            chrome.tabs.update(extraParam.tabId, {
+                url: "https://www.ebay.ca/sch/_nkw="+locSearchQuery
+            });
+            break;
+        case "Bing":
+            chrome.tabs.update(extraParam.tabId, {
+                url: "https://www.bing.com/search?q="+locSearchQuery
+            });
+            break;
+        case "StackOverflow":
+            chrome.tabs.update(extraParam.tabId, {
+                url: "https://stackoverflow.com/search?q="+locSearchQuery
+            });
+            break;
+        default:
+            chrome.tabs.update(extraParam.tabId, {
+                url: "https://www.google.com/search?q="+locSearchQuery
+            });
+            break;
+    }
+}
+
+function createWindow(param, extraParam){
+    let windowMode = param.fields.WindowMode.Kind.StringValue;
+    if(windowMode==="incognito"){
+        return chrome.windows.create({focused:true, incognito:true});
+    }
+    chrome.windows.create({focused: true});
+}
+
+function closeWindow(param, extraParam){
+    chrome.windows.remove(extraParam.winId);
+}
+
+function cycleWindow(param, extraParam){
+    chrome.windows.getAll((windows)=>{
+       for(let index = 0; index<windows.length; index++){
+           let windowId = extraParam.winId;
+           if(windowId==null){
+               windowId = prevWinId;
+           }
+           if(windows[index].id===windowId){
+               let pointer = 0;
+               if(index+1<windows.length){
+                   pointer = index + 1;
+               }
+               chrome.windows.update(windows[pointer].id, {focused:true});
+           }
+       }
     });
 }
