@@ -1,3 +1,7 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-undef */
+//<reference types="chrome"/>
+
 function scrollPage(param, extraParam, fnParam) {
   let x = 0;
   let y = 0;
@@ -57,7 +61,7 @@ function scrollPageHelper(x, y, extraParam) {
   if (scroll != null) {
     clearInterval(scroll);
   }
-  if (scrollParam.direction != "stop") {
+  if (scrollParam.direction !== "stop") {
     scroll = setInterval(() => {
       chrome.tabs.executeScript(extraParam.tabId, {
         code: `window.scrollBy({top: ${y}, left: ${x}, behavior: 'smooth'})`

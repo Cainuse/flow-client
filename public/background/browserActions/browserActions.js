@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+//<reference types="chrome"/>
+
 /**
  * Changes the display state of browser
  * @param {*} win
@@ -21,15 +24,15 @@ function changeStateOfBrowser(param, extraParam) {
 
 function backwardForwardRefreshPage(param, extraParam) {
   let locParam = param.fields.PageAction.Kind.StringValue;
-  if (locParam != "") {
-    if (locParam == "forward") {
+  if (locParam !== "") {
+    if (locParam === "forward") {
       chrome.tabs.goForward();
-    } else if (locParam == "backward") {
+    } else if (locParam === "backward") {
       chrome.tabs.goBack();
     }
   } else {
     locParam = param.fields.PageActionCont.Kind.StringValue;
-    if (locParam == "refresh") {
+    if (locParam === "refresh") {
       chrome.tabs.reload();
     }
   }
