@@ -113,8 +113,8 @@ function searchWeb(param, extraParam){
 }
 
 function createWindow(param, extraParam){
-    let locParam = param.fields.WindowMode.Kind.StringValue;
-    if(locParam==="incognito"){
+    let windowMode = param.fields.WindowMode.Kind.StringValue;
+    if(windowMode==="incognito"){
         return chrome.windows.create({focused:true, incognito:true});
     }
     chrome.windows.create({focused: true});
