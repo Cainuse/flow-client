@@ -8,16 +8,18 @@
     "newtab": "./index.html"
   },
   "background": {
-    "scripts": ["./background/sessionalActions/sessionalActions.js",
+    "scripts": [
+      "./background/sessionalActions/sessionalActions.js",
       "./background/actionRouter/actionRouter.js",
       "./background/background.js",
       "./background/tabularActions/tabularActions.js",
       "./background/browserActions/browserActions.js",
       "./background/pageActions/pageActions.js",
       "./background/pageActions/pageActionsVar.js"
-      ],
+    ],
     "persistent": true
   },
+  "web_accessible_resources": ["*.html"],
   "permissions": [
     "tabs",
     "webNavigation",
@@ -26,5 +28,5 @@
     "activeTab",
     "identity.email"
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'"
 }

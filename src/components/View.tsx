@@ -8,9 +8,7 @@ export default class View extends React.Component {
     return (
       <Layout style={{ minHeight: "100vh" }}>
         <Sidebar />
-        <Layout>
-          {this.props.children}
-        </Layout>
+        <Layout>{this.props.children}</Layout>
       </Layout>
     );
   }
