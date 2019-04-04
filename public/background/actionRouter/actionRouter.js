@@ -39,8 +39,6 @@ function messageHandler(parsedMessage, websocket) {
           return deleteTab(parsedMessage.param, extraParam);
         case "Create Tab":
           return createTab(parsedMessage.param, extraParam);
-        case "Exit App":
-          return endSession(websocket);
         case "Web Search":
           return searchWeb(parsedMessage.param, extraParam);
         case "Create Window":
@@ -51,6 +49,8 @@ function messageHandler(parsedMessage, websocket) {
           return zoomView(parsedMessage.param, extraParam);
         case "Change Window":
           return cycleWindow(parsedMessage.param, extraParam);
+        case "Exit App":
+          return endSession(websocket);
         default:
           return false;
       }
