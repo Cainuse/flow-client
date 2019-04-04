@@ -1,10 +1,12 @@
+/* eslint-disable no-undef */
+//<reference types="chrome"/>
+
 /**
  * Changes the display state of browser
  * @param {*} win
  */
 
 function changeStateOfBrowser(param, extraParam) {
-<<<<<<< HEAD
     let availableStates = ["normal", "minimized", "maximized", "fullscreen"];
     let locParam = param.fields.DisplayMode.Kind.StringValue;
     let browserWinId;
@@ -17,34 +19,19 @@ function changeStateOfBrowser(param, extraParam) {
     if (availableStates.includes(locParam)) {
         chrome.windows.update(browserWinId, { state: locParam });
     }
-=======
-  console.log("Activated!");
-  let availableStates = ["normal", "minimized", "maximized", "fullscreen"];
-  let locParam = param.fields.DisplayMode.Kind.StringValue;
-  let browserWinId;
-  if (!extraParam) {
-    browserWinId = prevWinId;
-  } else {
-    browserWinId = extraParam.winId;
-  }
-  console.log(browserWinId);
-  if (availableStates.includes(locParam)) {
-    chrome.windows.update(browserWinId, { state: locParam });
-  }
->>>>>>> Implement tabular zoom
 }
 
 function backwardForwardRefreshPage(param, extraParam) {
   let locParam = param.fields.PageAction.Kind.StringValue;
-  if (locParam != "") {
-    if (locParam == "forward") {
+  if (locParam !== "") {
+    if (locParam === "forward") {
       chrome.tabs.goForward();
-    } else if (locParam == "backward") {
+    } else if (locParam === "backward") {
       chrome.tabs.goBack();
     }
   } else {
     locParam = param.fields.PageActionCont.Kind.StringValue;
-    if (locParam == "refresh") {
+    if (locParam === "refresh") {
       chrome.tabs.reload();
     }
   }
@@ -97,7 +84,6 @@ function zoomView(param, extraParam) {
       default:
         break;
     }
-<<<<<<< HEAD
     let regex = /\.+/
     let regex1 = /\s+/
     chrome.tabs.update(extraParam.tabId, {
@@ -181,7 +167,3 @@ function cycleWindow(param, extraParam){
        }
     });
 }
-=======
-  });
-}
->>>>>>> Implement tabular zoom

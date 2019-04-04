@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 //<reference types="chrome"/>
-// <reference types="uuid"/>
 async function main() {
   await createWebSocketConnection();
 }

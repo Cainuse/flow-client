@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+//<reference types="chrome"/>
+
 let prevTabId = null;
 let prevWinId = null;
 
