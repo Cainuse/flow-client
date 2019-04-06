@@ -15,10 +15,10 @@ async function createWebSocketConnection() {
   }, 600000);
 
   if ("WebSocket" in window) {
+    //const signedJWT = generateJWT();
     websocket = new WebSocket("ws://localhost:9090/ws");
     websocket.onopen = function() {
       websocket.send(`{"email":"${userEmail}", "action":"Sign In"}`);
-
       console.log("client did reach out");
     };
 

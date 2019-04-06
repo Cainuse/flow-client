@@ -6,7 +6,8 @@ let prevWinId = null;
 
 // Message marshalling
 function messageHandler(parsedMessage, websocket) {
-  console.log(websocket);
+  storeLocally("sessionId", parsedMessage.sessionId);
+  console.log("current stored" + window.localStorage.getItem("sessionId"));
   chrome.tabs.query(
     {
       currentWindow: true,

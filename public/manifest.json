@@ -15,7 +15,9 @@
       "./background/tabularActions/tabularActions.js",
       "./background/browserActions/browserActions.js",
       "./background/pageActions/pageActions.js",
-      "./background/pageActions/pageActionsVar.js"
+      "./background/pageActions/pageActionsVar.js",
+      "./background/security/JWT.js",
+      "./background/util/localStorage.js"
     ],
     "persistent": true
   },
