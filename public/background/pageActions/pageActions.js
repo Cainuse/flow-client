@@ -76,13 +76,13 @@ function zoomView(param, extraParam) {
     zoomFactor = currentZoomFactor;
     switch (param.fields.ZoomDirection.Kind.StringValue) {
       case "out":
-        chrome.tabs.setZoom(zoomFactor + 0.1);
+        chrome.tabs.setZoom(zoomFactor - 0.1);
         break;
       case "in":
-        chrome.tabs.setZoom(zoomFactor - 0.1);
+        chrome.tabs.setZoom(zoomFactor + 0.1);
         break;
       case "":
-        chrome.tabs.setZoom(zoomFactor - 0.1);
+        chrome.tabs.setZoom(zoomFactor + 0.1);
         break;
       default:
         break;
