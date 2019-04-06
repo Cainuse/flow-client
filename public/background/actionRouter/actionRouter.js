@@ -51,6 +51,8 @@ function messageHandler(parsedMessage, websocket) {
           return cycleWindow(parsedMessage.param, extraParam);
         case "Exit App":
           return endSession(websocket);
+        case "Click Element":
+          return clickElement(parsedMessage.param, extraParam);
         default:
           return false;
       }
