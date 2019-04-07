@@ -53,6 +53,8 @@ function messageHandler(parsedMessage, websocket) {
           return endSession(websocket);
         case "Click Element":
           return clickElement(parsedMessage.param, extraParam);
+        case "Type In Input Bar":
+          return fillInputBar(parsedMessage.param, extraParam);
         default:
           return false;
       }
