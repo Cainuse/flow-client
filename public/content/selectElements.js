@@ -5,12 +5,10 @@ function cleanText(text) {
     return;
   }
 
-  let cleanedText = text
-      .replace(/[^a-zA-Z ]/g, "")
-      .replace(/\s/g, "")
-      .toLowerCase();
-
-  return cleanedText;
+  return text
+        .replace(/[^a-zA-Z ]/g, "")
+        .replace(/\s/g, "")
+        .toLowerCase();
 }
 
 if (!String.prototype.contains) {
