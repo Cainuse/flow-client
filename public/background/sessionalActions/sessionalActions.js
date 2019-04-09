@@ -5,6 +5,7 @@ async function createWebSocketConnection() {
   let websocket, isCommandSuccessful;
   let userEmail, userId;
   await chrome.identity.getProfileUserInfo(user => {
+    console.log(user);
     userEmail = user.email;
     userId = user.id;
   });
@@ -18,7 +19,6 @@ async function createWebSocketConnection() {
     websocket = new WebSocket("ws://localhost:9090/ws");
     websocket.onopen = function() {
       websocket.send(`{"email":"${userEmail}", "action":"Sign In"}`);
-
       console.log("client did reach out");
     };
 

@@ -7,6 +7,12 @@
   "chrome_url_overrides": {
     "newtab": "./index.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["./content/selectElements.js"]
+    }
+  ],
   "background": {
     "scripts": [
       "./background/sessionalActions/sessionalActions.js",
@@ -15,7 +21,9 @@
       "./background/tabularActions/tabularActions.js",
       "./background/browserActions/browserActions.js",
       "./background/pageActions/pageActions.js",
-      "./background/pageActions/pageActionsVar.js"
+      "./background/pageActions/pageActionsVar.js",
+      "./background/security/JWT.js",
+      "./background/util/localStorage.js"
     ],
     "persistent": true
   },
