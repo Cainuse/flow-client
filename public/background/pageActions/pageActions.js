@@ -72,7 +72,7 @@ function scrollPageHelper(x, y, extraParam) {
 
 function zoomView(param, extraParam) {
   let zoomFactor;
-  chrome.tabs.getZoom((currentZoomFactor)=> {
+  chrome.tabs.getZoom(currentZoomFactor => {
     zoomFactor = currentZoomFactor;
     switch (param.fields.ZoomDirection.Kind.StringValue) {
       case "out":
@@ -90,23 +90,20 @@ function zoomView(param, extraParam) {
   });
 }
 
-function clickElement(param, extraParam){
-  let elementName = param.fields.ElementName.Kind.StringValue.toLowerCase();
-  chrome.tabs.executeScript(extraParam.tabId,{
-    code: `${utilCode}
-    document.getElementByInnerText("${elementName}", false, "select").click();`
+function clickElement(param, extraParam) {
+  let userInput = param.fields.ElementName.Kind.StringValue.toLowerCase();
+  chrome.tabs.sendMessage(extraParam.tabId, {
+    type: "select",
+    userInput: userInput
   });
 }
 
-function fillInputBar(param, extraParam){
+function fillInputBar(param, extraParam) {
   let userInput = param.fields.Input.Kind.StringValue.toLowerCase();
-  chrome.tabs.executeScript(extraParam.tabId,{
-    code:
-        `${utilCode}
-    let inputBar = document.getElementByInnerText(null, false, "input");
-    inputBar.value = "${userInput}";
-    inputBar.type = "submit";
-    inputBar.click();`
-  }
-  )
+  chrome.tabs.sendMessage(extraParam.tabId, {
+    type: "input",
+    userInput: userInput
+  });
 }
+
+
