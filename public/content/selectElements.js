@@ -5,21 +5,24 @@ function cleanText(text) {
     return;
   }
 
-  return text
-    .replace(/[^a-zA-Z ]/g, "")
-    .replace(/\\s/g, "")
-    .toLowerCase();
+  let cleanedText = text
+      .replace(/[^a-zA-Z ]/g, "")
+      .replace(/\s/g, "")
+      .toLowerCase();
+
+  return cleanedText;
 }
 
+if (!String.prototype.contains) {
+  String.prototype.contains = function(s) {
+    return this.indexOf(s) > -1;
+  };
+}
 // eslint-disable-next-line no-undef
 chrome.runtime.onMessage.addListener(request => {
   const userInput = request.userInput;
   HTMLElement.prototype.getElementsByInnerText = function(text, escape) {
     const textCleaned = cleanText(text);
-
-    if (textCleaned == null) {
-      return;
-    }
 
     let nodes = null;
     nodes = this.querySelectorAll("*");
@@ -28,7 +31,10 @@ chrome.runtime.onMessage.addListener(request => {
     for (let i = 0; i < nodes.length; i++) {
       switch(request.type){
         case "select":
-          if (cleanText(nodes[i].innerText).contains(textCleaned)) {
+          if (textCleaned==null){
+            return
+          }
+          if (cleanText(nodes[i].innerText)==textCleaned) {
             matches.push(nodes[i]);
           }
           break;
@@ -56,14 +62,8 @@ chrome.runtime.onMessage.addListener(request => {
   document.getElementsByInnerText =
     HTMLElement.prototype.getElementsByInnerText;
 
-  if (!String.prototype.contains) {
-    String.prototype.contains = function(s) {
-      return this.indexOf(s) > -1;
-    };
-  }
-
   HTMLElement.prototype.getElementByInnerText = function(text) {
-    var result = this.getElementsByInnerText(text);
+    var result = this.getElementsByInnerText(text, false);
     if (result.length == 0) return null;
     return result[0];
   };
@@ -73,11 +73,11 @@ chrome.runtime.onMessage.addListener(request => {
 
   switch(request.type){
     case "select":
-      document.getElementByInnerText('"'+`${userInput}`+'"').click();
+      document.getElementByInnerText(`"${userInput}"`).click();
       break;
     case "input":
-      let inputBar = document.getElementByInnerText(null, false, "input");
-      inputBar.value = '"'+`${userInput}`+'"';
+      let inputBar = document.getElementByInnerText(null);
+      inputBar.value = `${userInput}`;
       inputBar.type = "submit";
       inputBar.click();
   }
