@@ -97,6 +97,7 @@ function clickElement(param, extraParam) {
     userInput: userInput
   });
 }
+<<<<<<< HEAD
 
 function fillInputBar(param, extraParam) {
   let userInput = param.fields.Input.Kind.StringValue.toLowerCase();
@@ -107,3 +108,5 @@ function fillInputBar(param, extraParam) {
 }
 
 
+=======
+>>>>>>> Message Utils
