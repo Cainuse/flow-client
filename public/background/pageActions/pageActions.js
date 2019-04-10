@@ -96,6 +96,7 @@ function clickElement(param, extraParam) {
     type: "select",
     userInput: userInput
   });
+<<<<<<< HEAD
 }
 
 function fillInputBar(param, extraParam) {
@@ -104,4 +105,6 @@ function fillInputBar(param, extraParam) {
     type: "input",
     userInput: userInput
   });
+=======
+>>>>>>> Message Utils
 }
