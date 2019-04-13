@@ -1,3 +1,6 @@
+/* src/index.scss*/
+@import "~antd/dist/antd.css";
+
 body {
   margin: 0;
   padding: 0;
@@ -8,7 +11,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+/* src/index.scss */
+#my-extension-root {
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 25%;
+  right: 25%;
+  z-index: 2147483647;
+}
+
+#my-extension-root iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }

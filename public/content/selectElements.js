@@ -48,12 +48,14 @@ chrome.runtime.onMessage.addListener(request => {
     document.getElementsByInnerText =
       HTMLElement.prototype.getElementsByInnerText;
 
+    //Custom contains
     if (!String.prototype.contains) {
       String.prototype.contains = function(s) {
         return this.indexOf(s) > -1;
       };
     }
 
+    // Grabs first element by creaiting new function get element by inner text from getElementsByInnerText
     HTMLElement.prototype.getElementByInnerText = function(text) {
       var result = this.getElementsByInnerText(text);
       if (result.length == 0) return null;
