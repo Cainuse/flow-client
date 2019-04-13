@@ -91,71 +91,19 @@ function zoomView(param, extraParam) {
 }
 
 function clickElement(param, extraParam) {
-  let elementName = param.fields.ElementName.Kind.StringValue.toLowerCase();
-
-  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-    chrome.tabs.sendMessage(tabs[0].id, {
-      type: "select",
-      elementName: elementName
-    });
+  let userInput = param.fields.ElementName.Kind.StringValue.toLowerCase();
+  chrome.tabs.sendMessage(extraParam.tabId, {
+    type: "select",
+    userInput: userInput
   });
-
-  //   chrome.tabs.executeScript(extraParam.tabId, {
-  //     // file:"./pageActionsUtil/pageActionsUtil.js"
-  //     code: `HTMLElement.prototype.getElementsByInnerText = function (text, escape) {
-  //     var nodes  = this.querySelectorAll("*");
-  //     var matches = [];
-  //     for (var i = 0; i < nodes.length; i++) {
-  //         let nodeCleaned = cleanText(nodes[i].innerText);
-  //         let textCleaned = cleanText(text);
-  //         if(nodeCleaned && textCleaned){
-  //           if (nodeCleaned.contains(textCleaned)) {
-  //             matches.push(nodes[i]);
-  //           }
-  //         }
-  //     }
-  //     if (escape) {
-  //         return matches;
-  //     }
-  //     var result = [];
-  //     for (var i = 0; i < matches.length; i++) {
-  //         var filter = matches[i].getElementsByInnerText(text, true);
-  //         if (filter.length == 0) {
-  //             result.push(matches[i]);
-  //         }
-  //     }
-  //     return result;
-  // };
-  // document.getElementsByInnerText = HTMLElement.prototype.getElementsByInnerText;
-
-  // if (!String.prototype.contains) {
-  //     String.prototype.contains = function(s) {
-  //         return this.indexOf(s) > -1
-  //     }
-  // }
-
-  // function cleanText(text){
-  //     //remove special characters
-  //     if(text){
-  //         let string = text.replace(/[^a-zA-Z ]/g, "");
-  //         string = string.replace(/\\s/g, "");
-  //         //turn to lowercase
-  //         string = string.toLowerCase();
-  //         console.log(string)
-  //         return string;
-  //     }
-  //     return;
-  // }
-
-  // HTMLElement.prototype.getElementByInnerText = function (text) {
-  //     var result = this.getElementsByInnerText(text);
-  //     if (result.length == 0) return null;
-  //     return result[0];
-  // };
-
-  // document.getElementByInnerText = HTMLElement.prototype.getElementByInnerText;
-
-  // document.getElementByInnerText("${elementName}").click();
-  // `
-  //   });
 }
+
+function fillInputBar(param, extraParam) {
+  let userInput = param.fields.Input.Kind.StringValue.toLowerCase();
+  chrome.tabs.sendMessage(extraParam.tabId, {
+    type: "input",
+    userInput: userInput
+  });
+}
+
+
