@@ -17,18 +17,19 @@ chrome.runtime.onMessage.addListener(request => {
     const elementName = request.elementName;
     HTMLElement.prototype.getElementsByInnerText = function(text, escape) {
       const textCleaned = cleanText(text);
-
+      console.log(textCleaned);
       if (textCleaned == null) {
         return;
       }
 
-      let nodes = null;
-      nodes = this.querySelectorAll("*");
-
+      let nodes = this.querySelectorAll("*");
       let matches = [];
       for (let i = 0; i < nodes.length; i++) {
-        if (cleanText(nodes[i].innerText).contains(textCleaned)) {
-          matches.push(nodes[i]);
+        const cleanedText = cleanText(nodes[i].innerText);
+        if (nodes[i].nodeType === 1) {
+          if (cleanedText && cleanedText.contains(textCleaned)) {
+            matches.push(nodes[i]);
+          }
         }
       }
 
@@ -48,14 +49,12 @@ chrome.runtime.onMessage.addListener(request => {
     document.getElementsByInnerText =
       HTMLElement.prototype.getElementsByInnerText;
 
-    //Custom contains
     if (!String.prototype.contains) {
       String.prototype.contains = function(s) {
         return this.indexOf(s) > -1;
       };
     }
 
-    // Grabs first element by creaiting new function get element by inner text from getElementsByInnerText
     HTMLElement.prototype.getElementByInnerText = function(text) {
       var result = this.getElementsByInnerText(text);
       if (result.length == 0) return null;
