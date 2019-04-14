@@ -28,15 +28,17 @@ function performAction(context, userInput) {
             inputBar.value = `${userInput}`;
             inputBar.type = "submit";
             inputBar.click();
+        default:
+            break;
     }
 }
 
 function getElementsByInnerTextHelper(context, node, userText, matches) {
     switch (context) {
         case "select":
-            let cleanedNode = cleanText(node.innerText);
-            if (cleanedNode && userText) {
-                if (cleanText(node.innerText) == userText) {
+            if(node.nodeType === 1){
+                let cleanedNode = cleanText(node.innerText);
+                if(cleanedNode && cleanedNode.contains(userText)){
                     matches.push(node);
                 }
             }
@@ -45,6 +47,8 @@ function getElementsByInnerTextHelper(context, node, userText, matches) {
             if (node.tagName === "INPUT" && node.outerHTML.contains('type="text"')) {
                 matches.push(node);
             }
+            break;
+        default:
             break;
     }
 }
@@ -62,7 +66,7 @@ chrome.runtime.onMessage.addListener(request => {
         nodes = this.querySelectorAll("*");
         let matches = [];
         for (let i = 0; i < nodes.length; i++) {
-            getElementsByInnerTextHelper(request.type, nodes[i], userInput, matches)
+            getElementsByInnerTextHelper(request.type, nodes[i], textCleaned, matches)
         }
 
         if (escape) {
