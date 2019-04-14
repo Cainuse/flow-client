@@ -11,13 +11,6 @@ function cleanText(text) {
     .toLowerCase();
 }
 
-<<<<<<< HEAD
-if (!String.prototype.contains) {
-  String.prototype.contains = function(s) {
-    return this.indexOf(s) > -1;
-  };
-}
-
 function performAction(context, userInput) {
   switch (context) {
     case "select":
@@ -38,27 +31,6 @@ function getElementsByInnerTextHelper(context, node, userText, matches) {
       if (cleanedNode && userText) {
         if (cleanText(node.innerText) == userText) {
           matches.push(node);
-=======
-// eslint-disable-next-line no-undef
-chrome.runtime.onMessage.addListener(request => {
-  if (request.type === "select") {
-    const elementName = request.elementName;
-    HTMLElement.prototype.getElementsByInnerText = function(text, escape) {
-      const textCleaned = cleanText(text);
-      console.log(textCleaned);
-      if (textCleaned == null) {
-        return;
-      }
-
-      let nodes = this.querySelectorAll("*");
-      let matches = [];
-      for (let i = 0; i < nodes.length; i++) {
-        const cleanedText = cleanText(nodes[i].innerText);
-        if (nodes[i].nodeType === 1) {
-          if (cleanedText && cleanedText.contains(textCleaned)) {
-            matches.push(nodes[i]);
-          }
->>>>>>> Optimization2
         }
       }
       break;
