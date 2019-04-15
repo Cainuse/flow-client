@@ -105,5 +105,3 @@ function fillInputBar(param, extraParam) {
     userInput: userInput
   });
 }
-
-
