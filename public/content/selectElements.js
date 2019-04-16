@@ -1,7 +1,6 @@
 //<reference types="chrome"/>
 
 function cleanText(text) {
-
     if (!text) {
         return;
     }
@@ -21,13 +20,36 @@ if (!String.prototype.contains) {
 function performAction(context, userInput) {
     switch (context) {
         case "select":
-            document.getElementByInnerText(`"${userInput}"`).click();
+             let allElements = document.getElementsByInnerTextRoot(`"${userInput}"`).filter((element)=>{
+                let rect = element.getBoundingClientRect();
+                return !(
+                    (rect.x + rect.width) < 0
+                    || (rect.y + rect.height) < 0
+                    || (rect.x > window.innerWidth || rect.y > window.innerHeight)
+                );
+             });
+
+            //More than 1 elements found
+            if(allElements.length>1){
+                for(let element of allElements){
+                    element.style.backgroundColor = "#FDFF47";
+                }
+            }
+            //Exactly 1 element found
+            else if(allElements.length==1){
+                allElements[0].click();
+            }else{
+                console.log("No Element of matching description found");
+                return;
+            }
             break;
+
         case "input":
             let inputBar = document.getElementByInnerText(null);
             inputBar.value = `${userInput}`;
             inputBar.type = "submit";
             inputBar.click();
+            break;
         default:
             break;
     }
@@ -36,7 +58,7 @@ function performAction(context, userInput) {
 function getElementsByInnerTextHelper(context, node, userText, matches) {
     switch (context) {
         case "select":
-            if(node.nodeType === 1){
+            if(node.nodeType === 1 && node.nodeName!=="SCRIPT"){
                 let cleanedNode = cleanText(node.innerText);
                 if(cleanedNode && cleanedNode.contains(userText)){
                     matches.push(node);
@@ -63,7 +85,9 @@ chrome.runtime.onMessage.addListener(request => {
             return
         }
         let nodes = null;
+
         nodes = this.querySelectorAll("*");
+        console.log(nodes)
         let matches = [];
         for (let i = 0; i < nodes.length; i++) {
             getElementsByInnerTextHelper(request.type, nodes[i], textCleaned, matches)
@@ -82,6 +106,17 @@ chrome.runtime.onMessage.addListener(request => {
         return result;
     };
 
+    HTMLElement.prototype.getElementsByInnerTextRoot = function (text) {
+        const textCleaned = cleanText(text);
+        if (textCleaned == null && request.type == "select") {
+            return
+        }
+        let nodes = null;
+        nodes = this.querySelectorAll("body");
+        console.log(nodes);
+        return nodes[0].getElementsByInnerText(text, false);
+    };
+
     document.getElementsByInnerText =
         HTMLElement.prototype.getElementsByInnerText;
 
@@ -94,5 +129,7 @@ chrome.runtime.onMessage.addListener(request => {
     document.getElementByInnerText =
         HTMLElement.prototype.getElementByInnerText;
 
+    document.getElementsByInnerTextRoot =
+        HTMLElement.prototype.getElementsByInnerTextRoot;
     performAction(request.type, userInput);
 });
