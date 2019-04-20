@@ -4,45 +4,38 @@
 import Frame, { FrameContextConsumer } from "react-frame-component";
 import React from "react";
 import ReactDOM from "react-dom";
-import { notification, Modal } from "antd";
+import { notification } from "antd";
+import "antd/lib/notification/style/css";
 import "./content.scss";
 
 class Main extends React.Component {
   state = {
+    title: "",
     message: "",
-    messageType: ""
+    notificationType: ""
   };
 
   componentDidMount() {
     chrome.runtime.onMessage.addListener(request => {
-      if (request.type === "general-notification") {
+      if (request.type === "notification") {
         this.setState(
           {
+            title: request.title,
             message: request.message,
-            messageType: request.notificationType
+            notificationType: "success"
           },
-          () => {}
+          () => {
+            this.openNotificationWithIcon(request.notificationType);
+          }
         );
       }
     });
   }
 
-  handleOk = e => {};
-
-  handleCancel = e => {};
-
-  componentWillUpdate(prevProp, prevState) {}
-
   componentWillUnmount() {}
 
-  openNotificationWithIcon = type => {
-    notification[type]({
-      message: "Notification Title",
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification."
-    });
-  };
-  // this.openNotificationWithIcon("success");
+  openNotificationWithIcon = type => {};
+
   render() {
     return (
       <Frame
@@ -50,32 +43,24 @@ class Main extends React.Component {
           <link
             type="text/css"
             rel="stylesheet"
-            href={chrome.runtime.getURL("/static/css/content.css")}
+            href={chrome.runtime.getURL("/static/css/4.chunk.css")}
           />,
           <link
             type="text/css"
             rel="stylesheet"
-            href={chrome.runtime.getURL("/static/css/0.chunk.css")}
+            href={chrome.runtime.getURL("/static/css/content.css")}
           />
         ]}
       >
         <FrameContextConsumer>
           {({ document, window }) => {
-            return (
-              <div>
-                <Modal
-                  title="Basic Modal"
-                  visible={true}
-                  onOk={this.handleOk}
-                  onCancel={this.handleCancel}
-                >
-                  {" "}
-                  <div>HIII DO YOU SEE ME?</div>
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                </Modal>
-              </div>
+            return this.state.message ? (
+              notification[this.state.notificationType]({
+                message: this.state.title,
+                description: this.state.message
+              })
+            ) : (
+              <div />
             );
           }}
         </FrameContextConsumer>

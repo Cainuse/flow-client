@@ -1,9 +1,19 @@
 /* eslint-disable no-undef */
-function notification(message, notificationType) {
+//<reference types="chrome"/>
+
+var NotificationTypeEnum = {
+  Error: "error",
+  Info: "info",
+  Warning: "warning",
+  Success: "success"
+};
+
+function notification(title, message, notificationType) {
   chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     chrome.tabs.sendMessage(tabs[0].id, {
-      type: "general-notification",
+      type: "notification",
       notificationType: notificationType,
+      title: title,
       message: message
     });
   });

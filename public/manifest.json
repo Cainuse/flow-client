@@ -15,10 +15,11 @@
         "./library/jquery-ui-1.12.1/jquery-ui.js",
         "./content/selectElements.js",
         "./static/js/0.chunk.js",
-        "./static/js/5.chunk.js",
-        "./static/js/6.chunk.js",
-        "./static/js/content.chunk.js"
-      ]
+        "./static/js/3.chunk.js",
+        "./static/js/4.chunk.js",
+        "./static/js/content.js"
+      ],
+      "css": ["/static/css/app.css"]
     }
   ],
   "background": {
@@ -33,20 +34,22 @@
       "./background/pageActions/pageActions.js",
       "./background/pageActions/pageActionsVar.js",
       "./background/security/JWT.js",
-      "./background/util/localStorage.js"
+      "./background/util/localStorage.js",
+      "./background/util/promptUserMessages.js",
+      "./background/library/jsrsasign-all-min.js"
     ],
     "persistent": true
   },
   "web_accessible_resources": [
     "*.html",
-    "/static/css/0.chunk.css",
-    "/static/css/app.chunk.css",
-    "/static/css/content.chunk.css"
+    "/static/css/app.css",
+    "/static/css/content.css",
+    "/static/css/4.chunk.css"
   ],
   "permissions": [
     "tabs",
     "webNavigation",
-    "*://*/*",
+    "<all_urls>",
     "identity",
     "activeTab",
     "identity.email"
