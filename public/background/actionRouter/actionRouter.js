@@ -9,6 +9,7 @@ function messageHandler(parsedMessage, websocket) {
   storeLocally("sessionId", parsedMessage.sessionId);
   console.log(parsedMessage);
   //console.log("current stored" + window.localStorage.getItem("sessionId"));
+
   chrome.tabs.query(
     {
       currentWindow: true,

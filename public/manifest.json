@@ -5,7 +5,7 @@
   "browser_action": {},
   "description": "Testing voice control browser",
   "chrome_url_overrides": {
-    "newtab": "./index.html"
+    "newtab": "index.html"
   },
   "content_scripts": [
     {
@@ -13,8 +13,13 @@
       "js": [
         "./library/jquery-3.4.0.min.js",
         "./library/jquery-ui-1.12.1/jquery-ui.js",
-        "./content/selectElements.js"
-      ]
+        "./content/selectElements.js",
+        "./static/js/0.chunk.js",
+        "./static/js/5.chunk.js",
+        "./static/js/6.chunk.js",
+        "./static/js/content.chunk.js"
+      ],
+      "css": ["/static/css/0.chunk.css", "/static/css/content.chunk.css"]
     }
   ],
   "background": {
@@ -33,7 +38,12 @@
     ],
     "persistent": true
   },
-  "web_accessible_resources": ["*.html"],
+  "web_accessible_resources": [
+    "*.html",
+    "/static/css/0.chunk.css",
+    "/static/css/app.chunk.css",
+    "/static/css/content.chunk.css"
+  ],
   "permissions": [
     "tabs",
     "webNavigation",
@@ -42,5 +52,5 @@
     "activeTab",
     "identity.email"
   ],
-  "content_security_policy": "script-src 'self' 'sha256-5As4+3YpY62+l38PsxCEkjB1R4YtyktBtRScTJ3fyLU='; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }
