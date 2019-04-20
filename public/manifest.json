@@ -11,17 +11,20 @@
     {
       "matches": ["<all_urls>"],
       "js": [
+        "./library/jquery-3.4.0.min.js",
+        "./library/jquery-ui-1.12.1/jquery-ui.js",
         "./content/selectElements.js",
         "./static/js/0.chunk.js",
         "./static/js/5.chunk.js",
         "./static/js/6.chunk.js",
         "./static/js/content.chunk.js"
-      ],
-      "css": ["/static/css/0.chunk.css", "/static/css/content.chunk.css"]
+      ]
     }
   ],
   "background": {
     "scripts": [
+      "./library/jquery-3.4.0.min.js",
+      "./library/jquery-ui-1.12.1/jquery-ui.js",
       "./background/sessionalActions/sessionalActions.js",
       "./background/actionRouter/actionRouter.js",
       "./background/background.js",

@@ -98,6 +98,14 @@ function clickElement(param, extraParam) {
   });
 }
 
+function clickElementFollowUp(param, extraParam){
+  let userInput = param.fields.Integer.Kind.NumberValue;
+  chrome.tabs.sendMessage(extraParam.tabId, {
+    type: "select-followUp",
+    userInput: userInput
+  });
+}
+
 function fillInputBar(param, extraParam) {
   let userInput = param.fields.Input.Kind.StringValue.toLowerCase();
   chrome.tabs.sendMessage(extraParam.tabId, {
@@ -105,3 +113,14 @@ function fillInputBar(param, extraParam) {
     userInput: userInput
   });
 }
+
+function videoPlayback(param, extraParam) {
+  let userInput = param.fields.Playback.Kind.StringValue.toLowerCase();
+  chrome.tabs.sendMessage(extraParam.tabId, {
+    type: "video-playback",
+    userInput: userInput
+  });
+}
+
+
+

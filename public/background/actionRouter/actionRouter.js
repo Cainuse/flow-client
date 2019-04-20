@@ -7,6 +7,9 @@ let prevWinId = null;
 // Message marshalling
 function messageHandler(parsedMessage, websocket) {
   storeLocally("sessionId", parsedMessage.sessionId);
+  console.log(parsedMessage);
+  //console.log("current stored" + window.localStorage.getItem("sessionId"));
+
   chrome.tabs.query(
     {
       currentWindow: true,
@@ -53,8 +56,12 @@ function messageHandler(parsedMessage, websocket) {
           return endSession(websocket);
         case "Click Element":
           return clickElement(parsedMessage.param, extraParam);
+        case "Click Element - Multiple Selection":
+          return clickElementFollowUp(parsedMessage.param, extraParam);
         case "Type In Input Bar":
           return fillInputBar(parsedMessage.param, extraParam);
+        case "Video Action":
+          return videoPlayback(parsedMessage.param, extraParam);
         default:
           return false;
       }
