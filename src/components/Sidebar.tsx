@@ -1,9 +1,7 @@
-import { Menu, Icon, Button } from "antd";
+import { Layout, Menu, Icon } from "antd";
 import * as React from "react";
-import Sider from "antd/lib/layout/Sider";
-
 const SubMenu = Menu.SubMenu;
-
+const { Sider } = Layout;
 export default class Sidebar extends React.Component {
   state = {
     collapsed: false
@@ -16,7 +14,7 @@ export default class Sidebar extends React.Component {
   render() {
     return (
       <Sider
-        collapsible
+        collapsible={true}
         collapsed={this.state.collapsed}
         onCollapse={this.onCollapse}
       >

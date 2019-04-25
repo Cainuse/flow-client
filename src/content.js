@@ -17,27 +17,49 @@ class Main extends React.Component {
 
   componentDidMount() {
     chrome.runtime.onMessage.addListener(request => {
-      if (request.type === "notification") {
-        this.setState(
-          {
-            title: request.title,
-            message: request.message,
-            notificationType: "success"
-          },
-          () => {
-            this.openNotificationWithIcon(request.notificationType);
-          }
-        );
-      }
+      this.notificationReceiver(request);
     });
   }
 
-  componentWillUnmount() {}
+  notificationReceiver = request => {
+    if (request.type === "notification") {
+      this.setState(
+        {
+          title: request.title,
+          message: request.message,
+          notificationType: request.notificationType
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ title: "" });
+          }, 10800);
+        }
+      );
+    }
+  };
 
-  openNotificationWithIcon = type => {};
+  componentWillUnmount() {
+    chrome.runtime.onMessage.removeListener(this.notificationReceiver);
+  }
+
+  openNotificationWithIcon = document => {
+    document.body.style.backgroundColor = "transparent";
+    notification.config({
+      getContainer: () => {
+        return document.body;
+      },
+      placement: "topRight",
+      bottom: 50,
+      duration: 10
+    });
+    notification[this.state.notificationType]({
+      message: this.state.title,
+      description: this.state.message
+    });
+  };
 
   render() {
-    return (
+    return this.state.title ? (
       <Frame
         head={[
           <link
@@ -54,17 +76,14 @@ class Main extends React.Component {
       >
         <FrameContextConsumer>
           {({ document, window }) => {
-            return this.state.message ? (
-              notification[this.state.notificationType]({
-                message: this.state.title,
-                description: this.state.message
-              })
-            ) : (
-              <div />
+            return (
+              <div id="iframeid">{this.openNotificationWithIcon(document)}</div>
             );
           }}
         </FrameContextConsumer>
       </Frame>
+    ) : (
+      <div />
     );
   }
 }

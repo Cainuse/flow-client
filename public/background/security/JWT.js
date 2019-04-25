@@ -18,10 +18,5 @@ function generateJWT() {
   // Sign JWT, password=616161
   var sHeader = JSON.stringify(oHeader);
   var sPayload = JSON.stringify(oPayload);
-  return KJUR.jws.JWS.sign(
-    "HS256",
-    sHeader,
-    sPayload,
-    "42342789-e592-498a-9113-001b4c130336"
-  );
+  return KJUR.jws.JWS.sign("HS256", sHeader, sPayload, "");
 }
