@@ -4,82 +4,86 @@
 import Frame, { FrameContextConsumer } from "react-frame-component";
 import React from "react";
 import ReactDOM from "react-dom";
-import { notification, Modal } from "antd";
+import { notification } from "antd";
+import "antd/lib/notification/style/css";
 import "./content.scss";
 
 class Main extends React.Component {
   state = {
+    title: "",
     message: "",
-    messageType: ""
+    notificationType: ""
   };
 
   componentDidMount() {
     chrome.runtime.onMessage.addListener(request => {
-      if (request.type === "general-notification") {
-        this.setState(
-          {
-            message: request.message,
-            messageType: request.notificationType
-          },
-          () => {}
-        );
-      }
+      this.notificationReceiver(request);
     });
   }
 
-  handleOk = e => {};
+  notificationReceiver = request => {
+    if (request.type === "notification") {
+      this.setState(
+        {
+          title: request.title,
+          message: request.message,
+          notificationType: request.notificationType
+        },
+        () => {
+          setTimeout(() => {
+            this.setState({ title: "" });
+          }, 10800);
+        }
+      );
+    }
+  };
 
-  handleCancel = e => {};
+  componentWillUnmount() {
+    chrome.runtime.onMessage.removeListener(this.notificationReceiver);
+  }
 
-  componentWillUpdate(prevProp, prevState) {}
-
-  componentWillUnmount() {}
-
-  openNotificationWithIcon = type => {
-    notification[type]({
-      message: "Notification Title",
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification."
+  openNotificationWithIcon = document => {
+    document.body.style.backgroundColor = "transparent";
+    notification.config({
+      getContainer: () => {
+        return document.body;
+      },
+      placement: "topRight",
+      bottom: 50,
+      duration: 10
+    });
+    notification[this.state.notificationType]({
+      message: this.state.title,
+      description: this.state.message
     });
   };
-  // this.openNotificationWithIcon("success");
+
   render() {
-    return (
+    return this.state.title ? (
       <Frame
         head={[
           <link
             type="text/css"
             rel="stylesheet"
-            href={chrome.runtime.getURL("/static/css/content.css")}
+            href={chrome.runtime.getURL("/static/css/4.chunk.css")}
           />,
           <link
             type="text/css"
             rel="stylesheet"
-            href={chrome.runtime.getURL("/static/css/0.chunk.css")}
+            href={chrome.runtime.getURL("/static/css/content.css")}
           />
         ]}
       >
         <FrameContextConsumer>
           {({ document, window }) => {
             return (
-              <div>
-                <Modal
-                  title="Basic Modal"
-                  visible={true}
-                  onOk={this.handleOk}
-                  onCancel={this.handleCancel}
-                >
-                  {" "}
-                  <div>HIII DO YOU SEE ME?</div>
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                </Modal>
-              </div>
+              <div id="iframeid">{this.openNotificationWithIcon(document)}</div>
             );
           }}
         </FrameContextConsumer>
       </Frame>
+    ) : (
+      <div />
     );
   }
 }

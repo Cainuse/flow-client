@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 //<reference types="chrome"/>
 
@@ -18,12 +19,21 @@ async function createWebSocketConnection() {
   if ("WebSocket" in window) {
     websocket = new WebSocket("ws://localhost:9090/ws");
     websocket.onopen = function() {
-      websocket.send(`{"email":"${userEmail}", "action":"Sign In"}`);
-      console.log("client did reach out");
+      websocket.send(
+        `{"email":"${userEmail}", "action":"Sign In", "JWT": "${generateJWT()}"}`
+      );
     };
 
     websocket.onmessage = function(event) {
       if (event.data != null) {
+        if (event.data.Message === "Connection successfully established") {
+          console.log("successful");
+          notification(
+            "Connected!",
+            "Successful connection to server! You may begin",
+            NotificationTypeEnum.Success
+          );
+        }
         isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
         console.log(event.data);
@@ -43,7 +53,11 @@ function endSession(websocket) {
   console.log("Websocket closed");
   websocket.close(1000, "Client Termination");
   if (websocket.readyState === websocket.CLOSED) {
-    alert("Chrome Voice Control has ended due to inactivity");
+    notification(
+      "Disconnected",
+      "Chrome extension has now closed due to inactivity, please reconnect to continue.",
+      NotificationTypeEnum.Warning
+    );
     return;
   }
 }
