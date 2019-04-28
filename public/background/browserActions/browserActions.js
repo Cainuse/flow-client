@@ -37,14 +37,6 @@ function backwardForwardRefreshPage(param, extraParam) {
   }
 }
 
-// NOT YET SUPPORTED
-function captureScreen(tab) {
-  win = chrome.windows.getCurrent;
-  chrome.tabs.captureVisibleTab(dataUrl => {
-    console.log(dataUrl);
-  });
-}
-
 function goToWebPage(param, extraParam) {
   let urlParam = param.fields.url.Kind.StringValue;
   if (

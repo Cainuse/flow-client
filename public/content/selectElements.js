@@ -1,8 +1,8 @@
 //<reference types="chrome"/>
 
 function cleanText(text) {
-    if (!text) {
-        return;
+    if (!text || text.length===0) {
+        return null;
     }
 
     return text
@@ -17,6 +17,10 @@ if (!String.prototype.contains) {
     };
 }
 
+function cleanUpOverlays() {
+    $("div.flow-choice").remove();
+}
+
 let allElements = [];
 
 function performAction(context, userInput) {
@@ -24,7 +28,7 @@ function performAction(context, userInput) {
         case "select":
             //Filter function filters out the elements we do not want
             allElements.length = 0;
-            allElements = document.getElementsByInnerTextRoot(`"${userInput}"`).filter((element) => {
+            allElements = document.getElementsByInnerTextRoot(`${userInput}`).filter((element) => {
                 let rect = element.getBoundingClientRect();
                 return !(
                     (rect.x + rect.width) < 0
@@ -34,6 +38,7 @@ function performAction(context, userInput) {
             });
             //More than 1 elements found
             if (allElements.length > 1) {
+                cleanUpOverlays();
                 for (let i = 0; i < allElements.length; i++) {
                     let overlay = document.createElement('div');
                     overlay.style = "font-family: Impact, seif; background-color:yellow; width: auto; text-align:center; display:inline; border: 2px solid orange; border-radius:8px; left:0 position: absolute; z-index:999";
@@ -46,6 +51,7 @@ function performAction(context, userInput) {
             }
             //Exactly 1 element found
             else if (allElements.length == 1) {
+                cleanUpOverlays();
                 allElements[0].click();
                 allElements.length = 0;
             } else {
@@ -55,12 +61,12 @@ function performAction(context, userInput) {
             break;
         case "select-followUp":
             if (userInput >= 0 && userInput < allElements.length) {
-                $("div.flow-choice").remove();
+                cleanUpOverlays();
                 allElements[userInput].click();
                 allElements.length = 0;
             }
         case "input":
-            let inputBar = document.getElementByInnerText(null);
+            let inputBar = document.getElementsByInnerTextRoot(null)[0];
             inputBar.value = `${userInput}`;
             inputBar.type = "submit";
             inputBar.click();
@@ -110,46 +116,62 @@ function getElementsByInnerTextHelper(context, node, userText, matches) {
 
 }
 
+function getAllClickableElements(context, node, userText, matches) {
+    switch (context) {
+        case "select":
+            if (node.nodeName == "A" || node.onclick !== null || node.nodeName == "BUTTON") {
+                matches.push(node);
+            }
+            break;
+        // case "input":
+        //     if (node.tagName === "INPUT" && node.outerHTML.contains('type="text"')) {
+        //         matches.push(node);
+        //     }
+        //     break;
+        default:
+            break;
+    }
+}
+
 // eslint-disable-next-line no-undef
 chrome.runtime.onMessage.addListener(request => {
     let userInput = request.userInput;
-    HTMLElement.prototype.getElementsByInnerText = function (text, escape) {
-        if (request.type === "select") {
-            const textCleaned = cleanText(text);
-            if (textCleaned == null && request.type == "select") {
-                return
-            }
-            let nodes = null;
-            nodes = this.querySelectorAll("*");
-            console.log(nodes)
-            let matches = [];
+    HTMLElement.prototype.getElementsByInnerText = function (textCleaned, escape) {
+        let nodes = null;
+        nodes = this.querySelectorAll("*");
+        console.log(nodes);
+        let matches = [];
+        if (textCleaned !== null || request.type==="input") {
             for (let i = 0; i < nodes.length; i++) {
                 getElementsByInnerTextHelper(request.type, nodes[i], textCleaned, matches)
             }
-
-            if (escape) {
-                return matches;
+        } else {
+            for (let i = 0; i < nodes.length; i++) {
+                getAllClickableElements(request.type, nodes[i], textCleaned, matches);
             }
-
-            let result = [];
-            for (let i = 0; i < matches.length; i++) {
-                if (matches[i].getElementsByInnerText(text, true).length === 0) {
-                    result.push(matches[i]);
-                }
-            }
-            return result;
+            return matches;
         }
+
+        if (escape) {
+            return matches;
+        }
+
+        let result = [];
+        for (let i = 0; i < matches.length; i++) {
+            if (matches[i].getElementsByInnerText(textCleaned, true).length === 0) {
+                result.push(matches[i]);
+            }
+        }
+        return result;
+
     };
 
     HTMLElement.prototype.getElementsByInnerTextRoot = function (text) {
         const textCleaned = cleanText(text);
-        if (textCleaned == null && request.type == "select") {
-            return
-        }
         let nodes = null;
         nodes = this.querySelectorAll("body");
         console.log(nodes);
-        return nodes[0].getElementsByInnerText(text, false);
+        return nodes[0].getElementsByInnerText(textCleaned, false);
     };
 
     document.getElementsByInnerText =
@@ -173,5 +195,4 @@ chrome.runtime.onMessage.addListener(request => {
         HTMLElement.prototype.getElementsByInnerTextRoot;
 
     performAction(request.type, userInput);
-
 });

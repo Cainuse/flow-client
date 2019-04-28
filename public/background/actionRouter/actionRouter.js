@@ -25,6 +25,12 @@ function messageHandler(parsedMessage, websocket) {
         prevTabId = extraParam.tabId;
         prevWinId = extraParam.winId;
       }
+
+      //Move this to inner functions
+      let audio = new Audio(chrome.runtime.getURL("./././sound/base/pop.mp3"));
+      audio.volume = 0.5;
+      audio.play();
+
       switch (parsedMessage.command) {
         case "Scroll":
           return scrollPage(parsedMessage.param, extraParam, null);
@@ -62,6 +68,8 @@ function messageHandler(parsedMessage, websocket) {
           return fillInputBar(parsedMessage.param, extraParam);
         case "Video Action":
           return videoPlayback(parsedMessage.param, extraParam);
+        case "Capture Screen":
+          return captureScreen(parsedMessage.param, extraParam);
         default:
           return false;
       }

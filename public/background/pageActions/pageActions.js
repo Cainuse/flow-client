@@ -122,5 +122,13 @@ function videoPlayback(param, extraParam) {
   });
 }
 
-
+function captureScreen(param, extraParam) {
+  chrome.tabs.captureVisibleTab(extraParam.winId, dataUrl => {
+    chrome.downloads.download({
+      url: dataUrl,
+      filename: "flow_screenshot.jpg",
+      conflictAction:"uniquify"
+    })
+  });
+}
 
