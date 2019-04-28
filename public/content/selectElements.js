@@ -1,7 +1,7 @@
 //<reference types="chrome"/>
 
 function cleanText(text) {
-    if (!text || text.length===0) {
+    if (!text || text.length === 0) {
         return null;
     }
 
@@ -113,7 +113,6 @@ function getElementsByInnerTextHelper(context, node, userText, matches) {
         default:
             break;
     }
-
 }
 
 function getAllClickableElements(context, node, userText, matches) {
@@ -141,7 +140,7 @@ chrome.runtime.onMessage.addListener(request => {
         nodes = this.querySelectorAll("*");
         console.log(nodes);
         let matches = [];
-        if (textCleaned !== null || request.type==="input") {
+        if (textCleaned !== null || request.type === "input") {
             for (let i = 0; i < nodes.length; i++) {
                 getElementsByInnerTextHelper(request.type, nodes[i], textCleaned, matches)
             }
@@ -183,16 +182,23 @@ chrome.runtime.onMessage.addListener(request => {
         };
     }
 
-    HTMLElement.prototype.getElementByInnerText = function (text) {
-        var result = this.getElementsByInnerText(text);
-        if (result.length === 0) return null;
-        return result[0];
+    HTMLElement.prototype.getElementsByInnerTextRoot = function (text) {
+        const textCleaned = cleanText(text);
+        if (textCleaned == null && request.type === "select") {
+            return;
+        }
+        let nodes = null;
+        nodes = this.querySelectorAll("body");
+        console.log(nodes);
+        return nodes[0].getElementsByInnerText(text, false);
     };
 
-    document.getElementByInnerText = HTMLElement.prototype.getElementByInnerText;
+    document.getElementsByInnerText =
+        HTMLElement.prototype.getElementsByInnerText;
+
+    performAction(request.type, userInput);
 
     document.getElementsByInnerTextRoot =
         HTMLElement.prototype.getElementsByInnerTextRoot;
 
-    performAction(request.type, userInput);
 });

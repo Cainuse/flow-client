@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Breadcrumb, Layout } from "antd";
-import View from "./View";
+import { Layout } from "antd";
 
 const { Header, Content, Footer, Sider } = Layout;
 

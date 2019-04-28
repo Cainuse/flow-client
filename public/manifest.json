@@ -13,8 +13,13 @@
       "js": [
         "./library/jquery-3.4.0.min.js",
         "./library/jquery-ui-1.12.1/jquery-ui.js",
-        "./content/selectElements.js"
-      ]
+        "./content/selectElements.js",
+        "./static/js/0.chunk.js",
+        "./static/js/3.chunk.js",
+        "./static/js/4.chunk.js",
+        "./static/js/content.js"
+      ],
+      "css": ["/static/css/app.css"]
     }
   ],
   "background": {
@@ -29,14 +34,18 @@
       "./background/pageActions/pageActions.js",
       "./background/pageActions/pageActionsVar.js",
       "./background/security/JWT.js",
-      "./background/util/localStorage.js"
+      "./background/util/localStorage.js",
+      "./background/util/promptUserMessages.js",
+      "./background/library/jsrsasign-all-min.js"
     ],
     "persistent": true
   },
   "web_accessible_resources": [
     "*.html",
     "*.mp3",
-    "*.css"
+    "/static/css/app.css",
+    "/static/css/content.css",
+    "/static/css/4.chunk.css"
   ],
   "permissions": [
     "tabs",
