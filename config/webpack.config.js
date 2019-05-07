@@ -547,7 +547,7 @@ module.exports = function(webpackEnv) {
       // to their corresponding output file so that tools can pick it up without
       // having to parse `index.html`.
       new ManifestPlugin({
-        fileName: "asset-manifest-temp1.json",
+        fileName: "asset-manifest.json",
         publicPath: publicPath
       }),
       // Moment.js is an extremely popular library that bundles large locale files

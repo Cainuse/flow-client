@@ -6,7 +6,6 @@ async function main() {
 main();
 
 //For testing only
-function start(win) {
-}
+function start(win) {}
 
 chrome.browserAction.onClicked.addListener(start);
