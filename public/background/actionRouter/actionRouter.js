@@ -4,6 +4,8 @@
 let prevTabId = null;
 let prevWinId = null;
 
+let pinnedTabId = null;
+let pinnedWinId = null;
 // Message marshalling
 function messageHandler(parsedMessage, websocket) {
   storeLocally("sessionId", parsedMessage.sessionId);
@@ -25,7 +27,13 @@ function messageHandler(parsedMessage, websocket) {
         prevTabId = extraParam.tabId;
         prevWinId = extraParam.winId;
       }
-
+      //If pinned value are specified, apply overwrite
+      if(pinnedWinId!==null){
+        extraParam = {
+          tabId: pinnedTabId,
+          winId: pinnedWinId
+        };
+      }
       //Move this to inner functions
       let audio = new Audio(chrome.runtime.getURL("./././sound/base/pop.mp3"));
       audio.volume = 0.5;
@@ -70,6 +78,26 @@ function messageHandler(parsedMessage, websocket) {
           return videoPlayback(parsedMessage.param, extraParam);
         case "Capture Screen":
           return captureScreen(parsedMessage.param, extraParam);
+        case "Reopen Action":
+          return reopenSession(parsedMessage.param, extraParam);
+        case "Pin Browser":
+          notification(
+              "Flow Navigate",
+              "Pinning browser",
+              NotificationTypeEnum.Success
+          );
+          pinnedTabId = extraParam.tabId;
+          pinnedWinId = extraParam.winId;
+          break;
+        case "Unpin Browser":
+          notification(
+              "Flow Navigate",
+              "Unpinning browser",
+              NotificationTypeEnum.Success
+          );
+          pinnedTabId = null;
+          pinnedWinId = null;
+          break;
         default:
           return false;
       }

@@ -2,22 +2,75 @@
 //<reference types="chrome"/>
 
 function createTab(param, extraParam) {
-  chrome.tabs.create({ windowId: extraParam.winId, active: true });
+  notification(
+      "Flow Navigate",
+      "Creating new tab",
+      NotificationTypeEnum.Success
+  );
+  chrome.tabs.create({ windowId: extraParam.winId, active: true }, (tab)=>{
+    if(pinnedTabId!==null){
+      pinnedTabId = tab.id;
+    }
+  });
 }
 
-function deleteTab(param, extraParam) {
+async function deleteTab(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Deleting tab",
+      NotificationTypeEnum.Success
+  );
   let locStr = param.fields.number.Kind.StringValue;
   let locInd = param.fields.number.Kind.NumberValue;
-  if (locStr === "") {
-    chrome.tabs.remove(extraParam.tabId);
-  } else if (locInd != null) {
-    chrome.tabs.query({ index: locInd - 1 }, tabs => {
-      chrome.tabs.remove(tabs[0].id);
+  let nextPinnedTabId = null;
+  if(pinnedWinId!==null){
+    chrome.tabs.get(extraParam.tabId, (tab)=>{
+      let closedTabIndex = tab.index;
+      if(closedTabIndex>0){
+        chrome.tabs.query({index:closedTabIndex-1, windowId:extraParam.winId},(tabs)=>{
+          if(tabs.length>0){
+            nextPinnedTabId = tabs[0].id;
+          }
+        });
+      }else{
+        chrome.tabs.query({index:closedTabIndex+1, windowId:extraParam.winId},(tabs)=>{
+          if(tabs.length>0){
+            nextPinnedTabId = tabs[0].id;
+          }
+        });
+      }
+      if (locStr === "") {
+        chrome.tabs.remove(extraParam.tabId,()=>{
+              pinnedTabId = nextPinnedTabId;
+              console.log(pinnedTabId);
+            }
+        );
+      } else if (locInd != null) {
+        chrome.tabs.query({ index: locInd - 1 }, tabs => {
+          chrome.tabs.remove(tabs[0].id,()=>{
+              pinnedTabId = nextPinnedTabId;
+              console.log(pinnedTabId);
+          });
+        });
+      }
     });
+  }else{
+    if (locStr === "") {
+      chrome.tabs.remove(extraParam.tabId);
+    } else if (locInd != null) {
+      chrome.tabs.query({ index: locInd - 1 }, tabs => {
+        chrome.tabs.remove(tabs[0].id);
+      });
+    }
   }
 }
 
 function switchTab(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Switching tab",
+      NotificationTypeEnum.Success
+  );
   //Left Right
   if (param.fields.Direction.Kind.StringValue !== "") {
     locParam = param.fields.Direction.Kind.StringValue;
@@ -32,7 +85,11 @@ function switchTab(param, extraParam) {
           { index: tabInd + offset, windowId: extraParam.winId },
           tabs => {
             if (tabs.length > 0) {
-              chrome.tabs.update(tabs[0].id, { active: true });
+              chrome.tabs.update(tabs[0].id, { active: true },(tab)=>{
+                if(pinnedTabId!==null){
+                  pinnedTabId = tab.id;
+                }
+              });
             }
           }
         );
@@ -51,11 +108,15 @@ function switchTab(param, extraParam) {
         tabs => {
           if (tabs.length > 0) {
             console.log(tabs[0].id);
-            chrome.tabs.update(tabs[0].id, { active: true });
+            chrome.tabs.update(tabs[0].id, { active: true }, (tab)=>{
+              if(pinnedTabId!==null){
+                pinnedTabId = tab.id;
+              }
+            });
           }
         }
       );
-    });
+    })
   }
   //Index based
   else if (param.fields.number.Kind.NumberValue) {
@@ -64,8 +125,11 @@ function switchTab(param, extraParam) {
       { index: locParam - 1, windowId: extraParam.winId },
       tabs => {
         if (tabs.length > 0) {
-          console.log(tabs[0].id);
-          chrome.tabs.update(tabs[0].id, { active: true });
+          chrome.tabs.update(tabs[0].id, { active: true },(tab)=>{
+            if(pinnedTabId!==null){
+              pinnedTabId = tab.id;
+            }
+          });
         }
       }
     );
@@ -78,5 +142,27 @@ function helperNumberOfTabs() {
       "Number of open tabs in all normal browser windows:",
       tabs.length
     );
+  });
+}
+
+function getNextPinnedTabId(closedTab){
+  chrome.tabs.get(closedTab.tabId, (tab)=>{
+    let closedTabIndex = tab.index;
+    let id = null;
+    if(closedTabIndex>0){
+      chrome.tabs.query({index:closedTabIndex-1, windowId:closedTab.winId},(tabs)=>{
+        if(tabs.length>0){
+          id = tabs[0].id;
+        }
+        return id;
+      });
+    }else{
+      chrome.tabs.query({index:closedTabIndex+1, windowId:closedTab.winId},(tabs)=>{
+        if(tabs.length>0){
+          id = tabs[0].id;
+        }
+        return id;
+      });
+    }
   });
 }

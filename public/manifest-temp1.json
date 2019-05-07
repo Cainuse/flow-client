@@ -13,13 +13,8 @@
 			"js": [
 				"./library/jquery-3.4.0.min.js",
 				"./library/jquery-ui-1.12.1/jquery-ui.js",
-				"./content/selectElements.js",
-				"./static/js/0.chunk.js",
-				"./static/js/3.chunk.js",
-				"./static/js/4.chunk.js",
-				"./static/js/content.js"
-			],
-			"css": ["/static/css/app.css"]
+				"./content/selectElements.js"
+			]
 		}
 	],
 	"background": {
@@ -40,13 +35,7 @@
 		],
 		"persistent": true
 	},
-	"web_accessible_resources": [
-		"*.html",
-		"*.mp3",
-		"/static/css/app.css",
-		"/static/css/content.css",
-		"/static/css/4.chunk.css"
-	],
+	"web_accessible_resources": ["*.html", "*.mp3"],
 	"permissions": [
 		"tabs",
 		"webNavigation",
@@ -57,7 +46,7 @@
 		"identity.email",
 		"downloads",
 		"<all_urls>",
-		"sessions"
+        "sessions"
 	],
 	"content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }

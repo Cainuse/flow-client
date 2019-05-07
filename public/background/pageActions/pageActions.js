@@ -3,6 +3,11 @@
 //<reference types="chrome"/>
 
 function scrollPage(param, extraParam, fnParam) {
+  notification(
+      "Flow Navigate",
+      "Scrolling",
+      NotificationTypeEnum.Success
+  );
   let x = 0;
   let y = 0;
   let locParam;
@@ -37,6 +42,11 @@ function scrollPage(param, extraParam, fnParam) {
 }
 
 function changeScrollingSpeed(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Changing scrolling speed",
+      NotificationTypeEnum.Success
+  );
   switch (param.fields.ScrollingSpeed.Kind.StringValue) {
     case "slow":
       scrollParam.speed = 5;
@@ -71,6 +81,11 @@ function scrollPageHelper(x, y, extraParam) {
 }
 
 function zoomView(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Zoom view",
+      NotificationTypeEnum.Success
+  );
   let zoomFactor;
   chrome.tabs.getZoom(currentZoomFactor => {
     zoomFactor = currentZoomFactor;
@@ -91,6 +106,11 @@ function zoomView(param, extraParam) {
 }
 
 function clickElement(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Clicking element",
+      NotificationTypeEnum.Success
+  );
   let userInput = param.fields.ElementName.Kind.StringValue.toLowerCase();
   chrome.tabs.sendMessage(extraParam.tabId, {
     type: "select",
@@ -99,6 +119,11 @@ function clickElement(param, extraParam) {
 }
 
 function clickElementFollowUp(param, extraParam){
+  notification(
+      "Flow Navigate",
+      "Clicking element",
+      NotificationTypeEnum.Success
+  );
   let userInput = param.fields.Integer.Kind.NumberValue;
   chrome.tabs.sendMessage(extraParam.tabId, {
     type: "select-followUp",
@@ -107,6 +132,11 @@ function clickElementFollowUp(param, extraParam){
 }
 
 function fillInputBar(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Filling input bar",
+      NotificationTypeEnum.Success
+  );
   let userInput = param.fields.Input.Kind.StringValue.toLowerCase();
   chrome.tabs.sendMessage(extraParam.tabId, {
     type: "input",
@@ -115,6 +145,11 @@ function fillInputBar(param, extraParam) {
 }
 
 function videoPlayback(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Video playback control",
+      NotificationTypeEnum.Success
+  );
   let userInput = param.fields.Playback.Kind.StringValue.toLowerCase();
   chrome.tabs.sendMessage(extraParam.tabId, {
     type: "video-playback",
@@ -123,6 +158,11 @@ function videoPlayback(param, extraParam) {
 }
 
 function captureScreen(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Screen captured",
+      NotificationTypeEnum.Success
+  );
   chrome.tabs.captureVisibleTab(extraParam.winId, dataUrl => {
     chrome.downloads.download({
       url: dataUrl,
