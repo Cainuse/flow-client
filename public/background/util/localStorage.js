@@ -7,7 +7,7 @@ function storeLocally(key, value) {
   notification(
     "Connected!",
     "Successful connection to server! You may begin",
-    NotificationTypeEnum.Success
+    NotificationTypeEnum.SUCCESS
   );
 
   window.localStorage.setItem(key, value);

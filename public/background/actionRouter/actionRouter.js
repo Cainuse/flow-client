@@ -84,7 +84,7 @@ function messageHandler(parsedMessage, websocket) {
           notification(
               "Flow Navigate",
               "Pinning browser",
-              NotificationTypeEnum.Success
+              NotificationTypeEnum.SUCCESS
           );
           pinnedTabId = extraParam.tabId;
           pinnedWinId = extraParam.winId;
@@ -93,7 +93,7 @@ function messageHandler(parsedMessage, websocket) {
           notification(
               "Flow Navigate",
               "Unpinning browser",
-              NotificationTypeEnum.Success
+              NotificationTypeEnum.SUCCESS
           );
           pinnedTabId = null;
           pinnedWinId = null;

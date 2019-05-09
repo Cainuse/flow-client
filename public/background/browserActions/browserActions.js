@@ -10,7 +10,7 @@ function changeStateOfBrowser(param, extraParam) {
   notification(
       "Flow Navigate",
       "Changing state of browser",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   let availableStates = ["normal", "minimized", "maximized", "fullscreen"];
   let locParam = param.fields.DisplayMode.Kind.StringValue;
@@ -30,7 +30,7 @@ function backwardForwardRefreshPage(param, extraParam) {
   notification(
       "Flow Navigate",
       "Performing page action",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   let locParam = param.fields.PageAction.Kind.StringValue;
   if (locParam !== "") {
@@ -51,7 +51,7 @@ function goToWebPage(param, extraParam) {
   notification(
       "Flow Navigate",
       "Going to web page",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   let urlParam = param.fields.url.Kind.StringValue;
   if (
@@ -80,7 +80,7 @@ function searchWeb(param, extraParam) {
   notification(
       "Flow Navigate",
       "Searching web",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   let locSearchQuery = param.fields.Query.Kind.StringValue;
   let locSearchEngine = param.fields.SearchEngine.Kind.StringValue;
@@ -127,7 +127,7 @@ function createWindow(param, extraParam) {
   notification(
       "Flow Navigate",
       "Creating new window",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   let windowMode = param.fields.WindowMode.Kind.StringValue;
   if (windowMode === "incognito") {
@@ -140,7 +140,7 @@ function closeWindow(param, extraParam) {
   notification(
       "Flow Navigate",
       "Closing window",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   chrome.windows.remove(extraParam.winId);
   pinnedWinId = null;
@@ -150,7 +150,7 @@ function cycleWindow(param, extraParam) {
   notification(
       "Flow Navigate",
       "Cycling window",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   chrome.windows.getAll(windows => {
     for (let index = 0; index < windows.length; index++) {

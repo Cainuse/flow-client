@@ -48,7 +48,7 @@ function endSession(websocket) {
   notification(
       "Flow Navigate",
       "Session has ended",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   console.log("Websocket closed");
   websocket.close(1000, "Client Termination");
@@ -56,7 +56,7 @@ function endSession(websocket) {
     notification(
       "Disconnected",
       "Chrome extension has now closed due to inactivity, please reconnect to continue.",
-      NotificationTypeEnum.Warning
+      NotificationTypeEnum.WARNING
     );
     return;
   }
@@ -66,7 +66,7 @@ function reopenSession(param, extraParam){
   notification(
       "Flow Navigate",
       "Reopening browser",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   chrome.sessions.restore();
 }

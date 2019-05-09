@@ -5,7 +5,7 @@ function createTab(param, extraParam) {
   notification(
       "Flow Navigate",
       "Creating new tab",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   chrome.tabs.create({ windowId: extraParam.winId, active: true }, (tab)=>{
     if(pinnedTabId!==null){
@@ -18,7 +18,7 @@ async function deleteTab(param, extraParam) {
   notification(
       "Flow Navigate",
       "Deleting tab",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   let locStr = param.fields.number.Kind.StringValue;
   let locInd = param.fields.number.Kind.NumberValue;
@@ -69,7 +69,7 @@ function switchTab(param, extraParam) {
   notification(
       "Flow Navigate",
       "Switching tab",
-      NotificationTypeEnum.Success
+      NotificationTypeEnum.SUCCESS
   );
   //Left Right
   if (param.fields.Direction.Kind.StringValue !== "") {
