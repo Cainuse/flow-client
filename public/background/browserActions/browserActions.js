@@ -7,6 +7,11 @@
  */
 
 function changeStateOfBrowser(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Changing state of browser",
+      NotificationTypeEnum.SUCCESS
+  );
   let availableStates = ["normal", "minimized", "maximized", "fullscreen"];
   let locParam = param.fields.DisplayMode.Kind.StringValue;
   let browserWinId;
@@ -22,30 +27,32 @@ function changeStateOfBrowser(param, extraParam) {
 }
 
 function backwardForwardRefreshPage(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Performing page action",
+      NotificationTypeEnum.SUCCESS
+  );
   let locParam = param.fields.PageAction.Kind.StringValue;
   if (locParam !== "") {
     if (locParam === "forward") {
-      chrome.tabs.goForward();
+      chrome.tabs.goForward(extraParam.tabId);
     } else if (locParam === "backward") {
-      chrome.tabs.goBack();
+      chrome.tabs.goBack(extraParam.tabId);
     }
   } else {
     locParam = param.fields.PageActionCont.Kind.StringValue;
     if (locParam === "refresh") {
-      chrome.tabs.reload();
+      chrome.tabs.reload(extraParam.tabId);
     }
   }
 }
 
-// NOT YET SUPPORTED
-function captureScreen(tab) {
-  win = chrome.windows.getCurrent;
-  chrome.tabs.captureVisibleTab(dataUrl => {
-    console.log(dataUrl);
-  });
-}
-
 function goToWebPage(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Going to web page",
+      NotificationTypeEnum.SUCCESS
+  );
   let urlParam = param.fields.url.Kind.StringValue;
   if (
     !urlParam.includes(".com") &&
@@ -69,28 +76,12 @@ function goToWebPage(param, extraParam) {
   });
 }
 
-function zoomView(param, extraParam) {
-  let zoomFactor;
-
-  chrome.tabs.getZoom(function(currentZoomFactor) {
-    zoomFactor = currentZoomFactor;
-    switch (param.fields.ZoomDirection.Kind.StringValue) {
-      case "out":
-        chrome.tabs.setZoom(zoomFactor + 0.1);
-        break;
-      case "in":
-        chrome.tabs.setZoom(zoomFactor - 0.1);
-        break;
-      case "":
-        chrome.tabs.setZoom(zoomFactor - 0.1);
-        break;
-      default:
-        break;
-    }
-  });
-}
-
 function searchWeb(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Searching web",
+      NotificationTypeEnum.SUCCESS
+  );
   let locSearchQuery = param.fields.Query.Kind.StringValue;
   let locSearchEngine = param.fields.SearchEngine.Kind.StringValue;
   switch (locSearchEngine) {
@@ -133,6 +124,11 @@ function searchWeb(param, extraParam) {
 }
 
 function createWindow(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Creating new window",
+      NotificationTypeEnum.SUCCESS
+  );
   let windowMode = param.fields.WindowMode.Kind.StringValue;
   if (windowMode === "incognito") {
     return chrome.windows.create({ focused: true, incognito: true });
@@ -141,10 +137,21 @@ function createWindow(param, extraParam) {
 }
 
 function closeWindow(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Closing window",
+      NotificationTypeEnum.SUCCESS
+  );
   chrome.windows.remove(extraParam.winId);
+  pinnedWinId = null;
 }
 
 function cycleWindow(param, extraParam) {
+  notification(
+      "Flow Navigate",
+      "Cycling window",
+      NotificationTypeEnum.SUCCESS
+  );
   chrome.windows.getAll(windows => {
     for (let index = 0; index < windows.length; index++) {
       let windowId = extraParam.winId;

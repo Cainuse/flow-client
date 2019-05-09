@@ -28,11 +28,6 @@ async function createWebSocketConnection() {
       if (event.data != null) {
         if (event.data.Message === "Connection successfully established") {
           console.log("successful");
-          notification(
-            "Connected!",
-            "Successful connection to server! You may begin",
-            NotificationTypeEnum.Success
-          );
         }
         isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
@@ -50,14 +45,28 @@ async function createWebSocketConnection() {
 }
 
 function endSession(websocket) {
+  notification(
+      "Flow Navigate",
+      "Session has ended",
+      NotificationTypeEnum.SUCCESS
+  );
   console.log("Websocket closed");
   websocket.close(1000, "Client Termination");
   if (websocket.readyState === websocket.CLOSED) {
     notification(
       "Disconnected",
       "Chrome extension has now closed due to inactivity, please reconnect to continue.",
-      NotificationTypeEnum.Warning
+      NotificationTypeEnum.WARNING
     );
     return;
   }
+}
+
+function reopenSession(param, extraParam){
+  notification(
+      "Flow Navigate",
+      "Reopening browser",
+      NotificationTypeEnum.SUCCESS
+  );
+  chrome.sessions.restore();
 }

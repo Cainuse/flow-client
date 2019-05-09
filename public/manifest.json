@@ -1,58 +1,63 @@
 {
-  "name": "Project Ascension",
-  "manifest_version": 2,
-  "version": "0.1",
-  "browser_action": {},
-  "description": "Testing voice control browser",
-  "chrome_url_overrides": {
-    "newtab": "index.html"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": [
-        "./library/jquery-3.4.0.min.js",
-        "./library/jquery-ui-1.12.1/jquery-ui.js",
-        "./content/selectElements.js",
-        "./static/js/0.chunk.js",
-        "./static/js/3.chunk.js",
-        "./static/js/4.chunk.js",
-        "./static/js/content.js"
-      ],
-      "css": ["/static/css/app.css"]
-    }
-  ],
-  "background": {
-    "scripts": [
-      "./library/jquery-3.4.0.min.js",
-      "./library/jquery-ui-1.12.1/jquery-ui.js",
-      "./background/sessionalActions/sessionalActions.js",
-      "./background/actionRouter/actionRouter.js",
-      "./background/background.js",
-      "./background/tabularActions/tabularActions.js",
-      "./background/browserActions/browserActions.js",
-      "./background/pageActions/pageActions.js",
-      "./background/pageActions/pageActionsVar.js",
-      "./background/security/JWT.js",
-      "./background/util/localStorage.js",
-      "./background/util/promptUserMessages.js",
-      "./background/library/jsrsasign-all-min.js"
-    ],
-    "persistent": true
-  },
-  "web_accessible_resources": [
-    "*.html",
-    "/static/css/app.css",
-    "/static/css/content.css",
-    "/static/css/4.chunk.css"
-  ],
-  "permissions": [
-    "tabs",
-    "webNavigation",
-    "<all_urls>",
-    "identity",
-    "activeTab",
-    "identity.email"
-  ],
-  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
+	"name": "Project Ascension",
+	"manifest_version": 2,
+	"version": "0.1",
+	"browser_action": {},
+	"description": "Testing voice control browser",
+	"chrome_url_overrides": {
+		"newtab": "index.html"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": [
+				"./library/jquery-3.4.0.min.js",
+				"./library/jquery-ui-1.12.1/jquery-ui.js",
+				"./content/selectElements.js",
+				"./static/js/0.chunk.js",
+				"./static/js/3.chunk.js",
+				"./static/js/4.chunk.js",
+				"./static/js/content.js"
+			],
+			"css": ["/static/css/app.css"]
+		}
+	],
+	"background": {
+		"scripts": [
+			"./library/jquery-3.4.0.min.js",
+			"./library/jquery-ui-1.12.1/jquery-ui.js",
+			"./background/sessionalActions/sessionalActions.js",
+			"./background/actionRouter/actionRouter.js",
+			"./background/background.js",
+			"./background/tabularActions/tabularActions.js",
+			"./background/browserActions/browserActions.js",
+			"./background/pageActions/pageActions.js",
+			"./background/pageActions/pageActionsVar.js",
+			"./background/security/JWT.js",
+			"./background/util/localStorage.js",
+			"./background/util/promptUserMessages.js",
+			"./background/library/jsrsasign-all-min.js"
+		],
+		"persistent": true
+	},
+	"web_accessible_resources": [
+		"*.html",
+		"*.mp3",
+		"/static/css/app.css",
+		"/static/css/content.css",
+		"/static/css/4.chunk.css"
+	],
+	"permissions": [
+		"tabs",
+		"webNavigation",
+		"notifications",
+		"*://*/*",
+		"identity",
+		"activeTab",
+		"identity.email",
+		"downloads",
+		"<all_urls>",
+		"sessions"
+	],
+	"content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }
