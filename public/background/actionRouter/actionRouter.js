@@ -79,7 +79,7 @@ function messageHandler(parsedMessage, websocket) {
         case "Capture Screen":
           return captureScreen(parsedMessage.param, extraParam);
         case "Reopen Action":
-          return reopenSession(parsedMessage.param, extraParam);
+          return reopenBrowser(parsedMessage.param, extraParam);
         case "Pin Browser":
           notification(
               "Flow Navigate",

@@ -6,6 +6,9 @@ async function main() {
 main();
 
 //For testing only
-function start(win) {}
+async function start(win) {
+  console.log("1")
+  await toggleStartEndSession(websocket);
+}
 
 chrome.browserAction.onClicked.addListener(start);

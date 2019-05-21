@@ -168,3 +168,12 @@ function cycleWindow(param, extraParam) {
     }
   });
 }
+
+function reopenBrowser(param, extraParam){
+  notification(
+      "Flow Navigate",
+      "Reopening browser",
+      NotificationTypeEnum.SUCCESS
+  );
+  chrome.sessions.restore();
+}

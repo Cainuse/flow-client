@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 //<reference types="chrome"/>
-
+let websocket;
 async function createWebSocketConnection() {
-  let websocket, isCommandSuccessful;
+  let isCommandSuccessful;
   let userEmail, userId;
   await chrome.identity.getProfileUserInfo(user => {
     console.log(user);
@@ -28,10 +28,12 @@ async function createWebSocketConnection() {
       if (event.data != null) {
         if (event.data.Message === "Connection successfully established") {
           console.log("successful");
+          //Change badge to display that app is on
         }
         isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
         console.log(event.data);
+        chrome.browserAction.setIcon({path:"./././images/icons/flow-logo.png"});
         // Reset timer
         window.clearTimeout(timeoutHandle);
         timeoutHandle = window.setTimeout(() => {
@@ -44,29 +46,30 @@ async function createWebSocketConnection() {
   }
 }
 
-function endSession(websocket) {
-  notification(
-      "Flow Navigate",
-      "Session has ended",
-      NotificationTypeEnum.SUCCESS
-  );
+async function toggleStartEndSession(websocket){
+  if(websocket.readyState === websocket.CLOSED){
+    await createWebSocketConnection();
+  }else if(websocket.readyState === websocket.OPEN){
+    await endSession(websocket);
+  }else if(websocket.readyState === websocket.CLOSING){
+    console.log("Websocket is disconnecting from server, please wait.");
+  }else{
+    console.log("Websocket is trying to connect to server, please wait.");
+  }
+}
+
+async function endSession(websocket) {
   console.log("Websocket closed");
-  websocket.close(1000, "Client Termination");
+  chrome.browserAction.setIcon({path:"./././images/icons/flow-logo-inactive.png"});
+  await websocket.close(1000, "Client Termination");
   if (websocket.readyState === websocket.CLOSED) {
     notification(
       "Disconnected",
-      "Chrome extension has now closed due to inactivity, please reconnect to continue.",
+      "Chrome extension has now closed, please reconnect to continue.",
       NotificationTypeEnum.WARNING
     );
     return;
   }
 }
 
-function reopenSession(param, extraParam){
-  notification(
-      "Flow Navigate",
-      "Reopening browser",
-      NotificationTypeEnum.SUCCESS
-  );
-  chrome.sessions.restore();
-}
+
