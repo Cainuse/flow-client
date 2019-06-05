@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 //<reference types="chrome"/>
 
-var NotificationTypeEnum = {
+let NotificationTypeEnum = {
   ERROR: "error",
   INFO: "info",
   WARNING: "warning",
