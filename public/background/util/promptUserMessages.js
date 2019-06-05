@@ -1,11 +1,7 @@
 /* eslint-disable no-undef */
 //<reference types="chrome"/>
 
-<<<<<<< HEAD
-var NotificationTypeEnum = {
-=======
 let NotificationTypeEnum = {
->>>>>>> Enable Connection to Amazon Instance
   ERROR: "error",
   INFO: "info",
   WARNING: "warning",

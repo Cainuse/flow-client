@@ -27,11 +27,14 @@ async function createWebSocketConnection() {
     websocket.onmessage = function(event) {
       if (event.data != null) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (event.data.Message === "Connection successfully established") {
           console.log("successful");
         }
 =======
 >>>>>>> Enable Connection to Amazon Instance
+=======
+>>>>>>> 3fa1c974485aebee1155fe31a4c4dee9464d59ae
         isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
         if (!validateJWT(JSON.parse(event.data).JWT)) {
