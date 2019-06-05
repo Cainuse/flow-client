@@ -26,15 +26,9 @@ async function createWebSocketConnection() {
 
     websocket.onmessage = function(event) {
       if (event.data != null) {
-<<<<<<< HEAD
-<<<<<<< HEAD
         if (event.data.Message === "Connection successfully established") {
           console.log("successful");
         }
-=======
->>>>>>> Enable Connection to Amazon Instance
-=======
->>>>>>> 3fa1c974485aebee1155fe31a4c4dee9464d59ae
         isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
         if (!validateJWT(JSON.parse(event.data).JWT)) {
@@ -53,9 +47,9 @@ async function createWebSocketConnection() {
 
 function endSession(websocket) {
   notification(
-      "Flow Navigate",
-      "Session has ended",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Session has ended",
+    NotificationTypeEnum.SUCCESS
   );
   console.log("Websocket closed");
   websocket.close(1000, "Client Termination");
@@ -69,11 +63,11 @@ function endSession(websocket) {
   }
 }
 
-function reopenSession(param, extraParam){
+function reopenSession(param, extraParam) {
   notification(
-      "Flow Navigate",
-      "Reopening browser",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Reopening browser",
+    NotificationTypeEnum.SUCCESS
   );
   chrome.sessions.restore();
 }
