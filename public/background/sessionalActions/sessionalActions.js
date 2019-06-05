@@ -26,16 +26,11 @@ async function createWebSocketConnection() {
 
     websocket.onmessage = function(event) {
       if (event.data != null) {
-        if (event.data.Message === "Connection successfully established") {
-          console.log("successful");
-          notification(
-            "Connected!",
-            "Successful connection to server! You may begin",
-            NotificationTypeEnum.Success
-          );
-        }
         isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
+        if (!validateJWT(JSON.parse(event.data).JWT)) {
+          console.log("Invalid JWT Token");
+        }
         console.log(event.data);
         // Reset timer
         window.clearTimeout(timeoutHandle);
@@ -44,8 +39,6 @@ async function createWebSocketConnection() {
         }, 600000);
       }
     };
-
-    // Use messageHandler's return to dictate whether to close websocket or not
   }
 }
 
@@ -56,7 +49,7 @@ function endSession(websocket) {
     notification(
       "Disconnected",
       "Chrome extension has now closed due to inactivity, please reconnect to continue.",
-      NotificationTypeEnum.Warning
+      NotificationTypeEnum.WARNING
     );
     return;
   }

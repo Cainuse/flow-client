@@ -3,6 +3,11 @@
 //<reference types="chrome"/>
 
 function scrollPage(param, extraParam, fnParam) {
+  notification(
+    "Connected!",
+    "Successful connection to server! You may begin",
+    NotificationTypeEnum.SUCCESS
+  );
   let x = 0;
   let y = 0;
   let locParam;
@@ -98,7 +103,7 @@ function clickElement(param, extraParam) {
   });
 }
 
-function clickElementFollowUp(param, extraParam){
+function clickElementFollowUp(param, extraParam) {
   let userInput = param.fields.Integer.Kind.NumberValue;
   chrome.tabs.sendMessage(extraParam.tabId, {
     type: "select-followUp",
@@ -121,6 +126,3 @@ function videoPlayback(param, extraParam) {
     userInput: userInput
   });
 }
-
-
-
