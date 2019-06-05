@@ -26,11 +26,17 @@ async function createWebSocketConnection() {
 
     websocket.onmessage = function(event) {
       if (event.data != null) {
+<<<<<<< HEAD
         if (event.data.Message === "Connection successfully established") {
           console.log("successful");
         }
+=======
+>>>>>>> Enable Connection to Amazon Instance
         isCommandSuccessful = messageHandler(JSON.parse(event.data), websocket);
         websocket.send(isCommandSuccessful);
+        if (!validateJWT(JSON.parse(event.data).JWT)) {
+          console.log("Invalid JWT Token");
+        }
         console.log(event.data);
         // Reset timer
         window.clearTimeout(timeoutHandle);
@@ -39,8 +45,6 @@ async function createWebSocketConnection() {
         }, 600000);
       }
     };
-
-    // Use messageHandler's return to dictate whether to close websocket or not
   }
 }
 

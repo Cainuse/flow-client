@@ -8,6 +8,8 @@ import { notification } from "antd";
 import "antd/lib/notification/style/css";
 import "./content.scss";
 
+const time_out = 10800;
+
 class Main extends React.Component {
   state = {
     title: "",
@@ -32,7 +34,7 @@ class Main extends React.Component {
         () => {
           setTimeout(() => {
             this.setState({ title: "" });
-          }, 10800);
+          }, time_out);
         }
       );
     }
@@ -42,7 +44,7 @@ class Main extends React.Component {
     chrome.runtime.onMessage.removeListener(this.notificationReceiver);
   }
 
-  openNotificationWithIcon = document => {
+  openNotificationWithIcon = (document, notificationType) => {
     document.body.style.backgroundColor = "transparent";
     notification.config({
       getContainer: () => {
@@ -52,7 +54,7 @@ class Main extends React.Component {
       bottom: 50,
       duration: 10
     });
-    notification[this.state.notificationType]({
+    notification[notificationType]({
       message: this.state.title,
       description: this.state.message
     });
@@ -77,7 +79,12 @@ class Main extends React.Component {
         <FrameContextConsumer>
           {({ document, window }) => {
             return (
-              <div id="iframeid">{this.openNotificationWithIcon(document)}</div>
+              <div id="iframeid">
+                {this.openNotificationWithIcon(
+                  document,
+                  this.state.notificationType
+                )}
+              </div>
             );
           }}
         </FrameContextConsumer>

@@ -3,11 +3,7 @@
 //<reference types="chrome"/>
 
 function scrollPage(param, extraParam, fnParam) {
-  notification(
-      "Flow Navigate",
-      "Scrolling",
-      NotificationTypeEnum.SUCCESS
-  );
+  notification("Flow Navigate", "Scrolling", NotificationTypeEnum.SUCCESS);
   let x = 0;
   let y = 0;
   let locParam;
@@ -43,9 +39,9 @@ function scrollPage(param, extraParam, fnParam) {
 
 function changeScrollingSpeed(param, extraParam) {
   notification(
-      "Flow Navigate",
-      "Changing scrolling speed",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Changing scrolling speed",
+    NotificationTypeEnum.SUCCESS
   );
   switch (param.fields.ScrollingSpeed.Kind.StringValue) {
     case "slow":
@@ -81,11 +77,7 @@ function scrollPageHelper(x, y, extraParam) {
 }
 
 function zoomView(param, extraParam) {
-  notification(
-      "Flow Navigate",
-      "Zoom view",
-      NotificationTypeEnum.SUCCESS
-  );
+  notification("Flow Navigate", "Zoom view", NotificationTypeEnum.SUCCESS);
   let zoomFactor;
   chrome.tabs.getZoom(currentZoomFactor => {
     zoomFactor = currentZoomFactor;
@@ -107,9 +99,9 @@ function zoomView(param, extraParam) {
 
 function clickElement(param, extraParam) {
   notification(
-      "Flow Navigate",
-      "Clicking element",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Clicking element",
+    NotificationTypeEnum.SUCCESS
   );
   let userInput = param.fields.ElementName.Kind.StringValue.toLowerCase();
   chrome.tabs.sendMessage(extraParam.tabId, {
@@ -118,11 +110,11 @@ function clickElement(param, extraParam) {
   });
 }
 
-function clickElementFollowUp(param, extraParam){
+function clickElementFollowUp(param, extraParam) {
   notification(
-      "Flow Navigate",
-      "Clicking element",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Clicking element",
+    NotificationTypeEnum.SUCCESS
   );
   let userInput = param.fields.Integer.Kind.NumberValue;
   chrome.tabs.sendMessage(extraParam.tabId, {
@@ -133,9 +125,9 @@ function clickElementFollowUp(param, extraParam){
 
 function fillInputBar(param, extraParam) {
   notification(
-      "Flow Navigate",
-      "Filling input bar",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Filling input bar",
+    NotificationTypeEnum.SUCCESS
   );
   let userInput = param.fields.Input.Kind.StringValue.toLowerCase();
   chrome.tabs.sendMessage(extraParam.tabId, {
@@ -146,9 +138,9 @@ function fillInputBar(param, extraParam) {
 
 function videoPlayback(param, extraParam) {
   notification(
-      "Flow Navigate",
-      "Video playback control",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Video playback control",
+    NotificationTypeEnum.SUCCESS
   );
   let userInput = param.fields.Playback.Kind.StringValue.toLowerCase();
   chrome.tabs.sendMessage(extraParam.tabId, {
@@ -159,16 +151,15 @@ function videoPlayback(param, extraParam) {
 
 function captureScreen(param, extraParam) {
   notification(
-      "Flow Navigate",
-      "Screen captured",
-      NotificationTypeEnum.SUCCESS
+    "Flow Navigate",
+    "Screen captured",
+    NotificationTypeEnum.SUCCESS
   );
   chrome.tabs.captureVisibleTab(extraParam.winId, dataUrl => {
     chrome.downloads.download({
       url: dataUrl,
       filename: "flow_screenshot.jpg",
-      conflictAction:"uniquify"
-    })
+      conflictAction: "uniquify"
+    });
   });
 }
-
