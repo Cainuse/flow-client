@@ -17,7 +17,7 @@ async function createWebSocketConnection() {
   }, 600000);
 
   if ("WebSocket" in window) {
-    websocket = new WebSocket("ws://localhost:9090/ws");
+    websocket = new WebSocket("wss://flownavigation.com/4000");
     websocket.onopen = function() {
       websocket.send(
         `{"email":"${userEmail}", "action":"Sign In", "JWT": "${generateJWT()}"}`
